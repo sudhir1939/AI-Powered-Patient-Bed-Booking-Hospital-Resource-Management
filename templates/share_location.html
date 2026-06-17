@@ -1,0 +1,198 @@
+<!-- share_location.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Share Live Location - Ambulance</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f8ff;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            padding: 20px;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-top: 5px solid #cce5ff;
+        }
+        
+        h2 {
+            color: #004085;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #004085;
+            box-shadow: 0 0 0 2px rgba(0, 64, 133, 0.2);
+        }
+        
+        .booking-details {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .detail-item {
+            margin-bottom: 5px;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+        
+        .share-btn {
+            background-color: #004085;
+            color: white;
+        }
+        
+        .share-btn:hover {
+            background-color: #002752;
+        }
+        
+        .cancel-btn {
+            background-color: #95a5a6;
+            color: white;
+        }
+        
+        .cancel-btn:hover {
+            background-color: #7f8c8d;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+            font-size: 0.9rem;
+            margin-top: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .btn-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-share"></i> Share Live Location</h1>
+        </header>
+        
+        <div class="card">
+            <h2><i class="fas fa-map-marker-alt"></i> Booking Details</h2>
+            <div class="booking-details">
+                <div class="detail-item">
+                    <span class="detail-label">Patient:</span> {{ booking.patient.name }}
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Vehicle:</span> {{ booking.vehicle.name }}
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Price:</span> ₹{{ booking.price }}
+                </div>
+                {% if booking.is_emergency %}
+                    <div class="detail-item">
+                        <span class="detail-label">Patient Location:</span> {{ booking.patient_location }}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <form method="POST">
+                <div class="form-group">
+                    <label for="live_location_link">Live Location Link</label>
+                    <input type="url" id="live_location_link" name="live_location_link" placeholder="Enter live location link (e.g., Google Maps share link)" required>
+                </div>
+                <div class="btn-group">
+                    <button type="submit" class="btn share-btn">Share Location</button>
+                    <a href="{{ url_for('ambulance_bookings') }}" class="btn cancel-btn">Cancel</a>
+                </div>
+            </form>
+        </div>
+        
+        <footer>
+            <p>© 2023 Hospital Resources Management System. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>

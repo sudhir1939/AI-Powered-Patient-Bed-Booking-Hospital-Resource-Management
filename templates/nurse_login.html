@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nurse Login - Hospital Resources Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f8ff;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+        
+        .login-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            border-top: 5px solid #9b59b6;
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .login-header h2 {
+            color: #9b59b6;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .login-header p {
+            color: #777;
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .alert ul {
+            list-style-type: none;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #9b59b6;
+            box-shadow: 0 0 0 2px rgba(155, 89, 182, 0.2);
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+        
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
+        }
+        
+        .login-btn {
+            background-color: #9b59b6;
+            color: white;
+            flex: 2;
+        }
+        
+        .login-btn:hover {
+            background-color: #8e44ad;
+        }
+        
+        .back-btn {
+            background-color: #f0f0f0;
+            color: #333;
+            flex: 1;
+        }
+        
+        .back-btn:hover {
+            background-color: #ddd;
+        }
+        
+        .nurse-features {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .features-title {
+            font-size: 1rem;
+            color: #555;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .features-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .feature-icon {
+            color: #9b59b6;
+        }
+        
+        .shift-info {
+            background-color: #f9f0ff;
+            border: 1px solid #9b59b6;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .shift-info p {
+            color: #9b59b6;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .shift-info small {
+            color: #777;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+            font-size: 0.9rem;
+            margin-top: auto;
+        }
+        
+        @media (max-width: 768px) {
+            .login-card {
+                padding: 25px;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+            }
+            
+            .features-list {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="login-container">
+            <div class="login-card">
+                <div class="login-header">
+                    <h2><i class="fas fa-user-nurse"></i> Nurse Login</h2>
+                    <p>Access patient care dashboard</p>
+                </div>
+                
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <div class="alert">
+                            <ul>
+                                {% for message in messages %}
+                                    <li>{{ message }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                {% endwith %}
+                
+                <form method="POST">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" placeholder="Enter your username" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                    </div>
+                    
+                    <div class="btn-group">
+                        <button type="submit" class="btn login-btn">Login</button>
+                        <a href="{{ url_for('index') }}" class="btn back-btn">Back to Home</a>
+                    </div>
+                </form>
+                
+                <div class="shift-info">
+                    <p><i class="fas fa-clock"></i> Shift Information</p>
+                    <small>Current shift: Day Shift (7:00 AM - 7:00 PM)</small>
+                </div>
+                
+                <div class="nurse-features">
+                    <p class="features-title">Nurse Portal Features:</p>
+                    <div class="features-list">
+                        <div class="feature-item">
+                            <i class="fas fa-heartbeat feature-icon"></i>
+                            <span>Vital Signs</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-pills feature-icon"></i>
+                            <span>Medication</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-notes-medical feature-icon"></i>
+                            <span>Patient Charts</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>© 2023 Hospital Resources Management System. All rights reserved.</p>
+    </footer>
+</body>
+</html>

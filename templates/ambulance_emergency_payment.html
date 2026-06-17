@@ -1,0 +1,49 @@
+<!-- ambulance_emergency_payment.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pay Ambulance Bill</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+    <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+        <h1>Emergency Ambulance Payment</h1>
+        <p>Amount: ₹{{ amount }}</p>
+        <p>Patient: {{ booking.patient_name }}</p>
+        <p>Location: {{ booking.location_shared }}</p>
+        <form action="{{ url_for('ambulance_payment_success', booking_id=booking_id) }}" method="POST">
+            <script>
+                var options = {
+                    "key": "{{ key }}",
+                    "amount": {{ int(amount * 100) }},
+                    "currency": "INR",
+                    "name": "Ambulance Booking",
+                    "description": "Emergency Service",
+                    "order_id": "{{ order['id'] }}",
+                    "handler": function (response) {
+                        document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
+                        document.getElementById('razorpay_order_id').value = response.razorpay_order_id;
+                        document.getElementById('razorpay_signature').value = response.razorpay_signature;
+                        document.getElementById('payment-form').submit();
+                    },
+                    "prefill": {
+                        "name": "{{ booking.patient_name }}",
+                        "contact": "{{ booking.contact_number }}"
+                    },
+                    "theme": {
+                        "color": "#e74c3c"
+                    }
+                };
+                var rzp = new Razorpay(options);
+                rzp.open();
+            </script>
+            <input type="hidden" id="razorpay_payment_id" name="razorpay_payment_id">
+            <input type="hidden" id="razorpay_order_id" name="razorpay_order_id">
+            <input type="hidden" id="razorpay_signature" name="razorpay_signature">
+            <form id="payment-form" method="POST"></form>
+        </form>
+    </div>
+</body>
+</html>

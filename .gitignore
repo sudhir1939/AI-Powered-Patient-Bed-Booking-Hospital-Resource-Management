@@ -1,0 +1,11 @@
+.gradle/
+build/
+.settings/
+.project
+.classpath
+.idea/
+*.class
+*.log
+venv/
+__pycache__/
+.env

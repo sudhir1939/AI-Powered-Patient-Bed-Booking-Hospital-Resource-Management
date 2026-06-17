@@ -1,0 +1,277 @@
+<!-- canteen_orders.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canteen Orders</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .status-pending { background-color: #fff3cd; }
+    .status-accepted { background-color: #d1ecf1; }
+    .status-paid { background-color: #d4edda; }
+    .status-preparing { background-color: #cce5ff; }
+    .status-out_for_delivery { background-color: #f8d7da; }
+    .status-delivered { background-color: #d4edda; }
+  </style>
+</head>
+<body>
+  <div class="container mt-5">
+
+    <h1 class="mb-4 text-center">Manage Canteen Orders</h1>
+    <a href="{{ url_for('canteen_dashboard') }}" class="btn btn-secondary mb-4">Back to Dashboard</a>
+
+    <!-- ================= PENDING ORDERS ================= -->
+    <div class="card mb-4 shadow-sm">
+      <div class="card-header bg-warning text-dark">
+        <h3>Pending Orders</h3>
+      </div>
+      <div class="card-body">
+
+        {% if pending_orders %}
+          {% for order_data in pending_orders %}
+            {% set order = order_data.order %}
+
+            <div class="border p-3 mb-3 rounded status-pending">
+              <p><strong>Order ID:</strong> {{ order.id }} | <strong>Patient:</strong> {{ order.patient.name }}</p>
+              <p><strong>Ordered At:</strong> {{ order.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+
+              {% if order_data.room and order_data.bed %}
+                <p><strong>Location:</strong> Room {{ order_data.room.name }} - Bed {{ order_data.bed.bed_number }}</p>
+              {% else %}
+                <p><strong>Location:</strong> Pickup at Canteen</p>
+              {% endif %}
+
+              <div>
+                {% set total = namespace(value=0) %}
+
+                {% for item in order.items %}
+                  {% set total.value = total.value + (item.item.price * item.quantity) %}
+                  <p>{{ item.item.name }} x {{ item.quantity }} - ₹{{ "%.2f"|format(item.item.price * item.quantity) }}</p>
+                {% endfor %}
+
+                <strong>Total: ₹{{ "%.2f"|format(total.value) }}</strong>
+              </div>
+
+              <div class="mt-2">
+                <a href="{{ url_for('canteen_accept_order', order_id=order.id) }}" class="btn btn-success btn-sm">Accept</a>
+                <a href="{{ url_for('canteen_reject_order', order_id=order.id) }}" class="btn btn-danger btn-sm">Reject</a>
+              </div>
+            </div>
+
+          {% endfor %}
+        {% else %}
+          <p class="text-muted">No pending orders.</p>
+        {% endif %}
+
+      </div>
+    </div>
+
+    <!-- ================= ACCEPTED ORDERS ================= -->
+    <div class="card mb-4 shadow-sm">
+      <div class="card-header bg-info text-white">
+        <h3>Accepted Orders</h3>
+      </div>
+      <div class="card-body">
+
+        {% if accepted_orders %}
+          {% for order_data in accepted_orders %}
+            {% set order = order_data.order %}
+
+            <div class="border p-3 mb-3 rounded status-accepted">
+              <p><strong>Order ID:</strong> {{ order.id }}</p>
+
+              {% if order_data.room and order_data.bed %}
+                <p><strong>Location:</strong> Room {{ order_data.room.name }} - Bed {{ order_data.bed.bed_number }}</p>
+              {% else %}
+                <p><strong>Location:</strong> Pickup at Canteen</p>
+              {% endif %}
+
+              <div>
+                {% set total = namespace(value=0) %}
+
+                {% for item in order.items %}
+                  {% set total.value = total.value + (item.item.price * item.quantity) %}
+                  <p>{{ item.item.name }} x {{ item.quantity }} - ₹{{ "%.2f"|format(item.item.price * item.quantity) }}</p>
+                {% endfor %}
+
+                <strong>Total: ₹{{ "%.2f"|format(total.value) }}</strong>
+              </div>
+            </div>
+
+          {% endfor %}
+        {% else %}
+          <p class="text-muted">No accepted orders.</p>
+        {% endif %}
+
+      </div>
+    </div>
+
+    <!-- ================= PAID ORDERS ================= -->
+    <div class="card mb-4 shadow-sm">
+      <div class="card-header bg-success text-white">
+        <h3>Paid Orders</h3>
+      </div>
+      <div class="card-body">
+
+        {% if paid_orders %}
+          {% for order_data in paid_orders %}
+            {% set order = order_data.order %}
+
+            <div class="border p-3 mb-3 rounded status-paid">
+              <p><strong>Order ID:</strong> {{ order.id }}</p>
+
+              {% if order_data.room and order_data.bed %}
+                <p><strong>Location:</strong> Room {{ order_data.room.name }} - Bed {{ order_data.bed.bed_number }}</p>
+              {% else %}
+                <p><strong>Location:</strong> Pickup at Canteen</p>
+              {% endif %}
+
+              <div>
+                {% set total = namespace(value=0) %}
+
+                {% for item in order.items %}
+                  {% set total.value = total.value + (item.item.price * item.quantity) %}
+                  <p>{{ item.item.name }} x {{ item.quantity }} - ₹{{ "%.2f"|format(item.item.price * item.quantity) }}</p>
+                {% endfor %}
+
+                <strong>Total: ₹{{ "%.2f"|format(total.value) }}</strong>
+              </div>
+
+              <a href="{{ url_for('canteen_update_status', order_id=order.id) }}" class="btn btn-primary btn-sm">Update Status</a>
+            </div>
+
+          {% endfor %}
+        {% else %}
+          <p class="text-muted">No paid orders.</p>
+        {% endif %}
+
+      </div>
+    </div>
+
+    <!-- ================= PREPARING ORDERS ================= -->
+    <div class="card mb-4 shadow-sm">
+      <div class="card-header bg-primary text-white">
+        <h3>Preparing Orders</h3>
+      </div>
+      <div class="card-body">
+
+        {% if preparing_orders %}
+          {% for order_data in preparing_orders %}
+            {% set order = order_data.order %}
+
+            <div class="border p-3 mb-3 rounded status-preparing">
+              <p><strong>Order ID:</strong> {{ order.id }}</p>
+
+              {% if order_data.room and order_data.bed %}
+                <p><strong>Location:</strong> Room {{ order_data.room.name }} - Bed {{ order_data.bed.bed_number }}</p>
+              {% else %}
+                <p><strong>Location:</strong> Pickup at Canteen</p>
+              {% endif %}
+
+              <div>
+                {% set total = namespace(value=0) %}
+
+                {% for item in order.items %}
+                  {% set total.value = total.value + (item.item.price * item.quantity) %}
+                  <p>{{ item.item.name }} x {{ item.quantity }} - ₹{{ "%.2f"|format(item.item.price * item.quantity) }}</p>
+                {% endfor %}
+
+                <strong>Total: ₹{{ "%.2f"|format(total.value) }}</strong>
+              </div>
+
+              <a href="{{ url_for('canteen_update_status', order_id=order.id) }}" class="btn btn-primary btn-sm">Update Status</a>
+            </div>
+
+          {% endfor %}
+        {% else %}
+          <p class="text-muted">No preparing orders.</p>
+        {% endif %}
+
+      </div>
+    </div>
+
+    <!-- ================= OUT FOR DELIVERY ================= -->
+    <div class="card mb-4 shadow-sm">
+      <div class="card-header bg-danger text-white">
+        <h3>Out for Delivery Orders</h3>
+      </div>
+      <div class="card-body">
+
+        {% if out_for_delivery_orders %}
+          {% for order_data in out_for_delivery_orders %}
+            {% set order = order_data.order %}
+
+            <div class="border p-3 mb-3 rounded status-out_for_delivery">
+              <p><strong>Order ID:</strong> {{ order.id }}</p>
+
+              {% if order_data.room and order_data.bed %}
+                <p><strong>Location:</strong> Room {{ order_data.room.name }} - Bed {{ order_data.bed.bed_number }}</p>
+              {% else %}
+                <p><strong>Location:</strong> Pickup at Canteen</p>
+              {% endif %}
+
+              <div>
+                {% set total = namespace(value=0) %}
+
+                {% for item in order.items %}
+                  {% set total.value = total.value + (item.item.price * item.quantity) %}
+                  <p>{{ item.item.name }} x {{ item.quantity }} - ₹{{ "%.2f"|format(item.item.price * item.quantity) }}</p>
+                {% endfor %}
+
+                <strong>Total: ₹{{ "%.2f"|format(total.value) }}</strong>
+              </div>
+
+              <a href="{{ url_for('canteen_update_status', order_id=order.id) }}" class="btn btn-primary btn-sm">Update Status</a>
+            </div>
+
+          {% endfor %}
+        {% else %}
+          <p class="text-muted">No out for delivery orders.</p>
+        {% endif %}
+
+      </div>
+    </div>
+
+    <!-- ================= DELIVERED ================= -->
+    <div class="card shadow-sm">
+      <div class="card-header bg-secondary text-white">
+        <h3>Delivered Orders</h3>
+      </div>
+      <div class="card-body">
+
+        {% if delivered_orders %}
+          {% for order_data in delivered_orders %}
+            {% set order = order_data.order %}
+
+            <div class="border p-3 mb-3 rounded status-delivered">
+              <p><strong>Order ID:</strong> {{ order.id }} | Delivered</p>
+
+              {% if order_data.room and order_data.bed %}
+                <p><strong>Location:</strong> Room {{ order_data.room.name }} - Bed {{ order_data.bed.bed_number }}</p>
+              {% else %}
+                <p><strong>Location:</strong> Pickup at Canteen</p>
+              {% endif %}
+
+              <div>
+                {% set total = namespace(value=0) %}
+
+                {% for item in order.items %}
+                  {% set total.value = total.value + (item.item.price * item.quantity) %}
+                  <p>{{ item.item.name }} x {{ item.quantity }} - ₹{{ "%.2f"|format(item.item.price * item.quantity) }}</p>
+                {% endfor %}
+
+                <strong>Total: ₹{{ "%.2f"|format(total.value) }}</strong>
+              </div>
+            </div>
+
+          {% endfor %}
+        {% else %}
+          <p class="text-muted">No delivered orders.</p>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>

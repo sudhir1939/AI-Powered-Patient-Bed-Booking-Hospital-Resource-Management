@@ -1,0 +1,132 @@
+<!-- ambulance_accept_booking.html (new) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accept Booking - Share Live Location</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f8ff;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-top: 5px solid #41b883;
+        }
+        
+        h1 {
+            color: #41b883;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .booking-info {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .booking-name {
+            font-weight: 600;
+            color: #41b883;
+            margin-bottom: 5px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            min-height: 80px;
+            resize: vertical;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #41b883;
+            box-shadow: 0 0 0 2px rgba(65, 184, 131, 0.2);
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background-color: #41b883;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .btn:hover {
+            background-color: #329268;
+        }
+        
+        .back-btn {
+            display: inline-block;
+            margin-top: 20px;
+            color: #41b883;
+            text-decoration: none;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1><i class="fas fa-check"></i> Accept Booking</h1>
+            <div class="booking-info">
+                <div class="booking-name">Patient: {{ booking.patient.name }} ({{ booking.use_type }})</div>
+                <div>Vehicle: {{ booking.vehicle.name }}</div>
+                {% if booking.location_link %}
+                    <div>Location Link: <a href="{{ booking.location_link }}" target="_blank">{{ booking.location_link }}</a></div>
+                {% endif %}
+            </div>
+            <form method="POST">
+                <div class="form-group">
+                    <label for="live_location_link">Share Your Live Location Link</label>
+                    <textarea id="live_location_link" name="live_location_link" placeholder="Paste your live location sharing link here..." required></textarea>
+                </div>
+                <button type="submit" class="btn">Accept and Send Confirmation</button>
+            </form>
+            <a href="{{ url_for('ambulance_bookings') }}" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Back to Bookings
+            </a>
+        </div>
+    </div>
+</body>
+</html>

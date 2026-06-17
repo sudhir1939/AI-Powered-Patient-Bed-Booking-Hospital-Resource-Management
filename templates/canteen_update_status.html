@@ -1,0 +1,49 @@
+<!-- canteen_update_status.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Order Status</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="card shadow">
+            <div class="card-header">
+                <h1>Update Status for Order #{{ order.id }}</h1>
+            </div>
+            <div class="card-body">
+                <p><strong>Patient:</strong> {{ order.patient.name }}</p>
+                <p><strong>Current Status:</strong> {{ order.status }}</p>
+
+                {# ✅ Reliable total calculation using a namespace #}
+                {% set total = namespace(value=0) %}
+                {% for item in order.items %}
+                    {% set total.value = total.value + (item.item.price * item.quantity) %}
+                {% endfor %}
+                <p><strong>Total:</strong> ₹{{ "%.2f"|format(total.value) }}</p>
+
+                {% if room %}
+                    <p><strong>Delivery Room:</strong> {{ room.name }}</p>
+                {% endif %}
+                {% if bed %}
+                    <p><strong>Delivery Bed:</strong> {{ bed.bed_number }}</p>
+                {% endif %}
+
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="status" class="form-label">New Status</label>
+                        <select name="status" id="status" class="form-select">
+                            <option value="preparing">Preparing</option>
+                            <option value="out_for_delivery">Out for Delivery</option>
+                            <option value="delivered">Mark Delivered</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update</button>
+                    <a href="{{ url_for('canteen_orders') }}" class="btn btn-secondary ms-2">Back to Orders</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

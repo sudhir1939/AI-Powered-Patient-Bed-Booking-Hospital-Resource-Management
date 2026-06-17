@@ -1,0 +1,59 @@
+<!-- canteen_update_statuses.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Update Order Statuses</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .status-accepted { background-color: #d1ecf1; }
+    .status-paid { background-color: #d4edda; }
+    .status-preparing { background-color: #cce5ff; }
+    .status-out_for_delivery { background-color: #f8d7da; }
+  </style>
+</head>
+<body>
+  <div class="container mt-5">
+    <h1 class="mb-4 text-center">Update Order Statuses</h1>
+    <a href="{{ url_for('canteen_dashboard') }}" class="btn btn-secondary mb-4">Back to Dashboard</a>
+    <a href="{{ url_for('canteen_orders') }}" class="btn btn-info mb-4">View All Orders</a>
+
+    {% if orders %}
+      {% for order_data in orders %}
+        {% set order = order_data.order %}
+        <div class="card mb-4 shadow-sm">
+          <div class="card-header">
+            <h5>Order #{{ order.id }} - {{ order.patient.name }}</h5>
+            <span class="badge bg-secondary">Current: {{ order.status }}</span>
+          </div>
+          <div class="card-body">
+            <p><strong>Ordered At:</strong> {{ order.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+
+            {% if order_data.room and order_data.bed %}
+              <p><strong>Location:</strong> Room {{ order_data.room.name }} - Bed {{ order_data.bed.bed_number }}</p>
+            {% else %}
+              <p><strong>Location:</strong> Pickup at Canteen</p>
+            {% endif %}
+
+            <div class="mb-3">
+              {% set total = namespace(value=0) %}
+              {% for item in order.items %}
+                {% set total.value = total.value + (item.item.price * item.quantity) %}
+                <p>{{ item.item.name }} x {{ item.quantity }} - ₹{{ "%.2f"|format(item.item.price * item.quantity) }}</p>
+              {% endfor %}
+              <strong>Total: ₹{{ "%.2f"|format(total.value) }}</strong>
+            </div>
+
+            <a href="{{ url_for('canteen_update_status', order_id=order.id) }}" class="btn btn-primary">Update Status</a>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="alert alert-info text-center">
+        No orders available for status update.
+      </div>
+    {% endif %}
+  </div>
+</body>
+</html>

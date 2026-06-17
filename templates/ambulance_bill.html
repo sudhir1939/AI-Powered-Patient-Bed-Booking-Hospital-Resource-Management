@@ -1,0 +1,207 @@
+<!-- ambulance_bill.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ambulance Bill - {{ booking.patient.name }}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f8ff;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-top: 5px solid #e74c3c;
+        }
+        
+        .bill-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .detail-group h3 {
+            color: #e74c3c;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 5px;
+        }
+        
+        .detail-item {
+            margin-bottom: 10px;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .detail-value {
+            color: #333;
+        }
+        
+        .total {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #e74c3c;
+            margin: 20px 0;
+            padding: 20px;
+            background-color: #fff3cd;
+            border-radius: 5px;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            flex: 1;
+            max-width: 200px;
+        }
+        
+        .pay-btn {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .pay-btn:hover {
+            background-color: #c0392b;
+        }
+        
+        .back-btn {
+            background-color: #95a5a6;
+            color: white;
+        }
+        
+        .back-btn:hover {
+            background-color: #7f8c8d;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+            font-size: 0.9rem;
+            margin-top: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .bill-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-file-invoice"></i> Ambulance Bill</h1>
+        </header>
+        
+        <div class="card">
+            <div class="bill-details">
+                <div class="detail-group">
+                    <h3>Patient Details</h3>
+                    <div class="detail-item">
+                        <span class="detail-label">Name:</span>
+                        <span class="detail-value">{{ booking.patient.name }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Contact:</span>
+                        <span class="detail-value">{{ booking.patient.mobile }}</span>
+                    </div>
+                </div>
+                <div class="detail-group">
+                    <h3>Booking Details</h3>
+                    <div class="detail-item">
+                        <span class="detail-label">Ambulance:</span>
+                        <span class="detail-value">{{ booking.ambulance.name }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Vehicle:</span>
+                        <span class="detail-value">{{ vehicle.name }} ({{ vehicle.number_plate }})</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Emergency:</span>
+                        <span class="detail-value">{{ 'Yes' if booking.is_emergency else 'No' }}</span>
+                    </div>
+                    {% if booking.patient_location %}
+                        <div class="detail-item">
+                            <span class="detail-label">Patient Location:</span>
+                            <span class="detail-value">{{ booking.patient_location }}</span>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="total">
+                Total Amount: ₹{{ amount }}
+            </div>
+            
+            <div class="btn-group">
+                <a href="{{ url_for('patient_ambulance_pay', booking_id=booking.id) }}" class="btn pay-btn">
+                    <i class="fas fa-credit-card"></i> Pay Now
+                </a>
+                <a href="{{ url_for('patient_dashboard') }}" class="btn back-btn">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2023 Hospital Resources Management System. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>

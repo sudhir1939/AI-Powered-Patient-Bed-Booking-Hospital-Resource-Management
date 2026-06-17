@@ -1,0 +1,527 @@
+<!-- patient_hospital.html (Full updated code with new changes) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ hospital.name }} - Hospital Resources Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+     
+        body {
+            background-color: #f0f8ff;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+     
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            flex: 1;
+        }
+     
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background: linear-gradient(135deg, #41b883 0%, #329268 100%);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+     
+        .header-content h1 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+     
+        .header-content p {
+            opacity: 0.9;
+        }
+     
+        .back-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+     
+        .back-btn:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+     
+        .hospital-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+     
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+     
+        .hospital-info-card {
+            border-top: 5px solid #41b883;
+        }
+     
+        .hospital-contact-card {
+            border-top: 5px solid #2c7fb8;
+        }
+     
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+     
+        .resource-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+     
+        .doctors-card {
+            border-top: 5px solid #2c7fb8;
+        }
+     
+        .ambulances-card {
+            border-top: 5px solid #e74c3c;
+        }
+     
+        .nurses-card {
+            border-top: 5px solid #9b59b6;
+        }
+     
+        .canteens-card {
+            border-top: 5px solid #e67e22;
+        }
+     
+        h2 {
+            color: #41b883;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+     
+        .hospital-contact-card h2 {
+            color: #2c7fb8;
+        }
+     
+        .doctors-card h2 {
+            color: #2c7fb8;
+        }
+     
+        .ambulances-card h2 {
+            color: #e74c3c;
+        }
+     
+        .nurses-card h2 {
+            color: #9b59b6;
+        }
+     
+        .canteens-card h2 {
+            color: #e67e22;
+        }
+     
+        .info-item {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+     
+        .info-label {
+            font-weight: 600;
+            color: #555;
+            display: block;
+            margin-bottom: 5px;
+        }
+     
+        .info-value {
+            color: #333;
+        }
+     
+        .resource-list {
+            list-style-type: none;
+        }
+     
+        .resource-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s ease;
+        }
+     
+        .resource-item:hover {
+            background-color: #f9f9f9;
+        }
+     
+        .resource-info {
+            flex: 1;
+        }
+     
+        .resource-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+     
+        .doctors-card .resource-name {
+            color: #2c7fb8;
+        }
+     
+        .ambulances-card .resource-name {
+            color: #e74c3c;
+        }
+     
+        .nurses-card .resource-name {
+            color: #9b59b6;
+        }
+     
+        .canteens-card .resource-name {
+            color: #e67e22;
+        }
+     
+        .resource-details {
+            font-size: 0.9rem;
+            color: #666;
+        }
+     
+        .empty-state {
+            text-align: center;
+            padding: 30px;
+            color: #777;
+        }
+     
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #ddd;
+        }
+     
+        .contact-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+     
+        .contact-btn {
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+        }
+     
+        .call-btn {
+            background-color: #e8f5e9;
+            color: #41b883;
+        }
+     
+        .call-btn:hover {
+            background-color: #41b883;
+            color: white;
+        }
+     
+        .email-btn {
+            background-color: #e6f2ff;
+            color: #2c7fb8;
+        }
+     
+        .email-btn:hover {
+            background-color: #2c7fb8;
+            color: white;
+        }
+     
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+            font-size: 0.9rem;
+            margin-top: 30px;
+        }
+     
+        @media (max-width: 768px) {
+            .hospital-details {
+                grid-template-columns: 1fr;
+            }
+         
+            .resources-grid {
+                grid-template-columns: 1fr;
+            }
+         
+            header {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+         
+            .resource-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+         
+            .contact-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1><i class="fas fa-hospital"></i> {{ hospital.name }}</h1>
+                <p>Complete hospital information and resources</p>
+            </div>
+            <a href="{{ url_for('patient_dashboard') }}" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </header>
+     
+        <div class="hospital-details">
+            <div class="card hospital-info-card">
+                <h2><i class="fas fa-info-circle"></i> Hospital Information</h2>
+                <div class="info-item">
+                    <span class="info-label">Hospital Name</span>
+                    <span class="info-value">{{ hospital.name }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Description</span>
+                    <span class="info-value">{{ hospital.info or 'No description available' }}</span>
+                </div>
+            </div>
+         
+            <div class="card hospital-contact-card">
+                <h2><i class="fas fa-address-book"></i> Contact Information</h2>
+                <div class="info-item">
+                    <span class="info-label">Mobile Number</span>
+                    <span class="info-value">{{ hospital.mobile }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Email Address</span>
+                    <span class="info-value">{{ hospital.email }}</span>
+                </div>
+                <div class="contact-buttons">
+                    <a href="tel:{{ hospital.mobile }}" class="contact-btn call-btn">
+                        <i class="fas fa-phone"></i> Call Hospital
+                    </a>
+                    <a href="mailto:{{ hospital.email }}" class="contact-btn email-btn">
+                        <i class="fas fa-envelope"></i> Send Email
+                    </a>
+                </div>
+            </div>
+        </div>
+     
+        <div class="resources-grid">
+            <div class="resource-card doctors-card">
+                <h2><i class="fas fa-user-md"></i> Doctors</h2>
+             
+                {% if doctors %}
+                    <ul class="resource-list">
+                        {% for doctor in doctors %}
+                            <li class="resource-item">
+                                <div class="resource-info">
+                                    <div class="resource-name">
+                                        <i class="fas fa-user-md"></i> <a href="{{ url_for('patient_doctor', doctor_id=doctor.id) }}">Dr. {{ doctor.name }}</a>
+                                    </div>
+                                    <div class="resource-details">
+                                        {{ doctor.email }} | {{ doctor.mobile }}
+                                    </div>
+                                </div>
+                                <div class="contact-buttons">
+                                    <a href="tel:{{ doctor.mobile }}" class="contact-btn call-btn">
+                                        <i class="fas fa-phone"></i>
+                                    </a>
+                                    <a href="mailto:{{ doctor.email }}" class="contact-btn email-btn">
+                                        <i class="fas fa-envelope"></i>
+                                    </a>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <div class="empty-state">
+                        <i class="fas fa-user-md"></i>
+                        <h3>No Doctors Available</h3>
+                        <p>There are currently no doctors registered at this hospital.</p>
+                    </div>
+                {% endif %}
+            </div>
+         
+            <div class="resource-card ambulances-card">
+                <h2><i class="fas fa-ambulance"></i> Ambulances</h2>
+             
+                {% if ambulances %}
+                    <ul class="resource-list">
+                        {% for ambulance in ambulances %}
+                            <li class="resource-item">
+                                <div class="resource-info">
+                                    <div class="resource-name">
+                                        <i class="fas fa-ambulance"></i> <a href="{{ url_for('patient_ambulance', ambulance_id=ambulance.id) }}">{{ ambulance.name }}</a>
+                                    </div>
+                                    <div class="resource-details">
+                                        {{ ambulance.email }} | {{ ambulance.mobile }} | Status: {{ ambulance.status }}
+                                    </div>
+                                </div>
+                                <div class="contact-buttons">
+                                    <a href="tel:{{ ambulance.mobile }}" class="contact-btn call-btn">
+                                        <i class="fas fa-phone"></i>
+                                    </a>
+                                    <a href="mailto:{{ ambulance.email }}" class="contact-btn email-btn">
+                                        <i class="fas fa-envelope"></i>
+                                    </a>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <div class="empty-state">
+                        <i class="fas fa-ambulance"></i>
+                        <h3>No Ambulances Available</h3>
+                        <p>There are currently no ambulances registered at this hospital.</p>
+                    </div>
+                {% endif %}
+            </div>
+         
+            <div class="resource-card nurses-card">
+                <h2><i class="fas fa-user-nurse"></i> Nurses</h2>
+             
+                {% if nurses %}
+                    <ul class="resource-list">
+                        {% for nurse in nurses %}
+                            <li class="resource-item">
+                                <div class="resource-info">
+                                    <div class="resource-name">
+                                        <i class="fas fa-user-nurse"></i> <a href="{{ url_for('patient_nurse', nurse_id=nurse.id) }}">Nurse {{ nurse.name }}</a>
+                                    </div>
+                                    <div class="resource-details">
+                                        {{ nurse.email }} | {{ nurse.mobile }}
+                                    </div>
+                                </div>
+                                <div class="contact-buttons">
+                                    <a href="tel:{{ nurse.mobile }}" class="contact-btn call-btn">
+                                        <i class="fas fa-phone"></i>
+                                    </a>
+                                    <a href="mailto:{{ nurse.email }}" class="contact-btn email-btn">
+                                        <i class="fas fa-envelope"></i>
+                                    </a>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <div class="empty-state">
+                        <i class="fas fa-user-nurse"></i>
+                        <h3>No Nurses Available</h3>
+                        <p>There are currently no nurses registered at this hospital.</p>
+                    </div>
+                {% endif %}
+            </div>
+         
+            <div class="resource-card canteens-card">
+                <h2><i class="fas fa-utensils"></i> Canteens</h2>
+             
+                {% if canteens %}
+                    <ul class="resource-list">
+                        {% for canteen in canteens %}
+                            <li class="resource-item">
+                                <div class="resource-info">
+                                    <div class="resource-name">
+                                        <i class="fas fa-utensils"></i> <a href="{{ url_for('patient_canteen', canteen_id=canteen.id) }}">{{ canteen.name }}</a>
+                                    </div>
+                                    <div class="resource-details">
+                                        {{ canteen.email }} | {{ canteen.mobile }}
+                                    </div>
+                                </div>
+                                <div class="contact-buttons">
+                                    <a href="tel:{{ canteen.mobile }}" class="contact-btn call-btn">
+                                        <i class="fas fa-phone"></i>
+                                    </a>
+                                    <a href="mailto:{{ canteen.email }}" class="contact-btn email-btn">
+                                        <i class="fas fa-envelope"></i>
+                                    </a>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <div class="empty-state">
+                        <i class="fas fa-utensils"></i>
+                        <h3>No Canteens Available</h3>
+                        <p>There are currently no canteens registered at this hospital.</p>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="resource-card rooms-card">
+                <h2><i class="fas fa-bed"></i> Book Bed</h2>
+             
+                {% if rooms %}
+                    <ul class="resource-list">
+                        {% for room in rooms %}
+                            <li class="resource-item">
+                                <div class="resource-info">
+                                    <div class="resource-name">
+                                        <i class="fas fa-bed"></i> {{ room.name }}
+                                    </div>
+                                    <div class="resource-details">
+                                        Beds: {{ room.num_beds }} | Price: ₹{{ room.price_per_bed }} per bed <br> {{ room.description or '' }}
+                                    </div>
+                                </div>
+                                <a href="{{ url_for('patient_room', hospital_id=hospital.id, room_id=room.id) }}" class="contact-btn call-btn">
+                                    <i class="fas fa-eye"></i> View Room
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <div class="empty-state">
+                        <i class="fas fa-bed"></i>
+                        <h3>No Rooms Available</h3>
+                        <p>There are currently no rooms registered at this hospital.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+     
+        <footer>
+            <p>© 2023 Hospital Resources Management System. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>

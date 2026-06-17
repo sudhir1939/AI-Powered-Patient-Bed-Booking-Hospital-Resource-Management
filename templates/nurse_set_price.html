@@ -1,0 +1,279 @@
+<!-- nurse_set_price.html (New file) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Set Price - Hospital Resources Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+       
+        body {
+            background-color: #f0f8ff;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+       
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            flex: 1;
+        }
+       
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+       
+        .header-content h1 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+       
+        .back-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+       
+        .back-btn:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+       
+        .form-section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+       
+        h2 {
+            color: #9b59b6;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+       
+        .form-group {
+            margin-bottom: 20px;
+        }
+       
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+       
+        input[type="number"], select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+       
+        input:focus, select:focus {
+            outline: none;
+            border-color: #41b883;
+            box-shadow: 0 0 0 2px rgba(65, 184, 131, 0.2);
+        }
+       
+        .checkbox-group {
+            display: flex;
+            gap: 15px;
+        }
+       
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
+        }
+       
+        .update-btn {
+            background-color: #41b883;
+            color: white;
+        }
+       
+        .update-btn:hover {
+            background-color: #329268;
+        }
+       
+        .rates-list {
+            margin-top: 30px;
+        }
+       
+        .rate-item {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+       
+        .rate-info {
+            flex: 1;
+        }
+       
+        .rate-type {
+            font-weight: 600;
+            color: #555;
+        }
+       
+        .rate-price {
+            color: #41b883;
+            font-weight: 600;
+        }
+       
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+       
+        .edit-btn {
+            background-color: #2c7fb8;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+        }
+       
+        .delete-btn {
+            background-color: #e74c3c;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+        }
+       
+        .edit-form {
+            margin-top: 10px;
+        }
+       
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+            font-size: 0.9rem;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1><i class="fas fa-dollar-sign"></i> Set Prices</h1>
+            </div>
+            <a href="{{ url_for('nurse_dashboard') }}" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </header>
+       
+        <div class="form-section">
+            <h2><i class="fas fa-map-marker-alt"></i> Set Availability</h2>
+            <form method="POST">
+                <input type="hidden" name="update_availability" value="1">
+                <div class="checkbox-group">
+<label>
+  <input type="checkbox" name="availability" value="home"
+         {% if nurse and nurse.availability_locations and 'home' in nurse.availability_locations.split(',') %}
+           checked
+         {% endif %}>
+  Home
+</label>
+
+<label><input type="checkbox" name="availability" value="hospital" {% if nurse and nurse.availability_locations and 'hospital' in nurse.availability_locations.split(',') %}checked{% endif %}> Hospital</label>
+                </div>
+                <button type="submit" class="update-btn">Update Availability</button>
+            </form>
+        </div>
+       
+        <div class="form-section">
+            <h2><i class="fas fa-plus"></i> Add New Rate</h2>
+            <form method="POST">
+                <input type="hidden" name="add_rate" value="1">
+                <div class="form-group">
+                    <label for="rate_type">Rate Type</label>
+                    <select id="rate_type" name="rate_type">
+                        <option value="per_hour_home">Per Hour - Home</option>
+                        <option value="per_hour_hospital">Per Hour - Hospital</option>
+                        <option value="per_day_home">Per Day - Home</option>
+                        <option value="per_day_hospital">Per Day - Hospital</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="price">Price</label>
+                    <input type="number" id="price" name="price" required>
+                </div>
+                <button type="submit" class="update-btn">Add Rate</button>
+            </form>
+        </div>
+       
+        <div class="form-section rates-list">
+            <h2><i class="fas fa-list"></i> Current Rates</h2>
+            {% for rate in rates %}
+                <div class="rate-item">
+                    <div class="rate-info">
+                        <span class="rate-type">{{ rate.rate_type.replace('_', ' ').title() }}</span>
+                        <span class="rate-price">₹{{ rate.price }}</span>
+                    </div>
+                    <div class="action-buttons">
+                        <form method="POST" class="edit-form">
+                            <input type="hidden" name="edit_rate" value="1">
+                            <input type="hidden" name="rate_id" value="{{ rate.id }}">
+                            <input type="number" name="price" value="{{ rate.price }}" required>
+                            <button type="submit" class="edit-btn">Edit</button>
+                        </form>
+                        <form method="POST">
+                            <input type="hidden" name="delete_rate" value="1">
+                            <input type="hidden" name="rate_id" value="{{ rate.id }}">
+                            <button type="submit" class="delete-btn">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+       
+        <footer>
+            <p>© 2023 Hospital Resources Management System. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>

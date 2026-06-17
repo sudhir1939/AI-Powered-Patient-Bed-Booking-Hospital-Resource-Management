@@ -1,0 +1,334 @@
+<!-- book_appointment.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Appointment with Dr. {{ doctor.name }}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f8ff;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #2c7fb8 0%, #236699 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+        
+        .doctor-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .booking-form {
+            margin-bottom: 25px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c7fb8;
+            font-size: 1rem;
+        }
+        
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: white;
+        }
+        
+        input[type="date"]:focus,
+        select:focus {
+            border-color: #2c7fb8;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(44, 127, 184, 0.1);
+        }
+        
+        .time-slot-option {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .time-range {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .price {
+            font-weight: 700;
+            color: #41b883;
+        }
+        
+        .btn {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            font-size: 1rem;
+            width: 100%;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #41b883 0%, #329268 100%);
+            color: white;
+            margin-bottom: 15px;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(65, 184, 131, 0.3);
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            transform: translateY(-2px);
+        }
+        
+        .info-card {
+            background-color: #e8f5e9;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border-left: 4px solid #41b883;
+        }
+        
+        .info-title {
+            font-weight: 700;
+            color: #2d5a3d;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .info-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        
+        .info-list li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+            color: #2d5a3d;
+        }
+        
+        .info-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #41b883;
+            font-weight: bold;
+        }
+        
+        .selected-slot-info {
+            background-color: #e6f2ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            border-left: 4px solid #2c7fb8;
+            display: none;
+        }
+        
+        .selected-time {
+            font-weight: 600;
+            color: #2c7fb8;
+        }
+        
+        .selected-price {
+            font-weight: 700;
+            color: #41b883;
+            font-size: 1.1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+            }
+            
+            header {
+                padding: 25px 20px;
+            }
+            
+            header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .content {
+                padding: 25px 20px;
+            }
+            
+            .doctor-info {
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Book Appointment</h1>
+            <div class="doctor-info">
+                <span>👨‍⚕️</span>
+                <span>Dr. {{ doctor.name }}</span>
+            </div>
+        </header>
+        
+        <div class="content">
+            <div class="info-card">
+                <div class="info-title">📋 Appointment Information</div>
+                <ul class="info-list">
+                    <li>Select your preferred date and time slot</li>
+                    <li>Complete payment to confirm your appointment</li>
+                    <li>You'll receive a confirmation after booking</li>
+                    <li>Arrive 10 minutes before your scheduled time</li>
+                </ul>
+            </div>
+            
+            <form method="POST" class="booking-form">
+                <div class="form-group">
+                    <label for="appointment_date">📅 Appointment Date</label>
+                    <input type="date" id="appointment_date" name="appointment_date" required min="{{ today }}">
+                </div>
+                
+                <div class="form-group">
+                    <label for="time_slot_id">⏰ Available Time Slots</label>
+                    <select id="time_slot_id" name="time_slot_id" required>
+                        <option value="">Select a time slot</option>
+                        {% for slot in time_slots %}
+                        <option value="{{ slot.id }}" data-price="{{ slot.price }}">
+                            {{ slot.start_time }} - {{ slot.end_time }} (₹{{ slot.price }})
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="selected-slot-info" id="selectedSlotInfo">
+                    <div>Selected Slot: <span class="selected-time" id="selectedTime"></span></div>
+                    <div>Amount to Pay: <span class="selected-price" id="selectedPrice"></span></div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">💳 Book and Pay Now</button>
+            </form>
+            
+            <a href="{{ url_for('patient_doctor', doctor_id=doctor.id) }}" class="btn btn-secondary">← Back to Doctor Profile</a>
+        </div>
+    </div>
+
+    <script>
+        // Set minimum date to today
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('appointment_date').min = today;
+        
+        // Show selected slot information
+        const timeSlotSelect = document.getElementById('time_slot_id');
+        const selectedSlotInfo = document.getElementById('selectedSlotInfo');
+        const selectedTime = document.getElementById('selectedTime');
+        const selectedPrice = document.getElementById('selectedPrice');
+        
+        timeSlotSelect.addEventListener('change', function() {
+            if (this.value) {
+                const selectedOption = this.options[this.selectedIndex];
+                const price = selectedOption.getAttribute('data-price');
+                selectedTime.textContent = selectedOption.textContent.split(' (')[0];
+                selectedPrice.textContent = '₹' + price;
+                selectedSlotInfo.style.display = 'block';
+            } else {
+                selectedSlotInfo.style.display = 'none';
+            }
+        });
+        
+        // Form submission confirmation
+        document.querySelector('form').addEventListener('submit', function(e) {
+            if (!timeSlotSelect.value) {
+                e.preventDefault();
+                alert('Please select a time slot');
+                return false;
+            }
+            
+            const selectedOption = timeSlotSelect.options[timeSlotSelect.selectedIndex];
+            const slotText = selectedOption.textContent;
+            const date = document.getElementById('appointment_date').value;
+            
+            if (!confirm(`Confirm appointment booking?\n\nDate: ${date}\nTime: ${slotText.split(' (')[0]}\nAmount: ${slotText.split('(')[1]}`)) {
+                e.preventDefault();
+                return false;
+            }
+        });
+        
+        // Auto-select first available slot if only one exists
+        window.addEventListener('load', function() {
+            if (timeSlotSelect.options.length === 2) { // 1 option + default "Select" option
+                timeSlotSelect.selectedIndex = 1;
+                timeSlotSelect.dispatchEvent(new Event('change'));
+            }
+        });
+    </script>
+</body>
+</html>

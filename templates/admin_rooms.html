@@ -1,0 +1,725 @@
+<!-- admin_rooms.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Rooms</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f8ff;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background: linear-gradient(135deg, #41b883 0%, #329268 100%);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content h1 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .header-content p {
+            opacity: 0.9;
+        }
+        
+        .back-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .back-btn:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-top: 5px solid #41b883;
+        }
+        
+        .create-room-section {
+            border-top-color: #41b883;
+        }
+        
+        .manage-rooms-section {
+            border-top-color: #2c7fb8;
+        }
+        
+        .booking-section {
+            border-top-color: #ff9f43;
+        }
+        
+        h1 {
+            color: #2c7fb8;
+            margin-bottom: 30px;
+        }
+        
+        h2 {
+            color: #41b883;
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .manage-rooms-section h2 {
+            color: #2c7fb8;
+        }
+        
+        .booking-section h2 {
+            color: #ff9f43;
+        }
+        
+        h3 {
+            color: #ff9f43;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f8ff;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        input, textarea, .search-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border 0.3s ease;
+        }
+        
+        input:focus, textarea:focus, .search-input:focus {
+            border-color: #41b883;
+            outline: none;
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .search-input {
+            margin-bottom: 20px;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .search-input:focus {
+            border-color: #2c7fb8;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        button, .action-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        
+        .btn-primary {
+            background-color: #41b883;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #329268;
+        }
+        
+        .btn-secondary {
+            background-color: #2c7fb8;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #236699;
+        }
+        
+        .btn-danger {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        .btn-warning {
+            background-color: #ff9f43;
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            background-color: #e08e3a;
+        }
+        
+        #layout-container {
+            width: 100%;
+            height: 300px;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            position: relative;
+            background-color: #f9f9f9;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        
+        .bed-element {
+            position: absolute;
+            width: 80px;
+            height: 30px;
+            padding: 5px;
+            background: lightblue;
+            cursor: move;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            user-select: none;
+        }
+        
+        .bed-item {
+            margin-bottom: 15px;
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s ease;
+        }
+        
+        .bed-item:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .room-name {
+            font-weight: 600;
+            color: #2c7fb8;
+            font-size: 1.1rem;
+        }
+        
+        .action-links {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-link {
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+        
+        .edit-link {
+            background-color: #e6f2ff;
+            color: #2c7fb8;
+        }
+        
+        .edit-link:hover {
+            background-color: #2c7fb8;
+            color: white;
+        }
+        
+        .view-link {
+            background-color: #e8f5e9;
+            color: #41b883;
+        }
+        
+        .view-link:hover {
+            background-color: #41b883;
+            color: white;
+        }
+        
+        .delete-link {
+            background-color: #ffe6e6;
+            color: #e74c3c;
+        }
+        
+        .delete-link:hover {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .booking-item {
+            margin-bottom: 15px;
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+        
+        .booking-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .patient-name {
+            font-weight: 600;
+            color: #2c7fb8;
+            font-size: 1.1rem;
+        }
+        
+        .booking-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+        
+        .detail-item {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .booking-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+        
+        .accept-btn {
+            background-color: #41b883;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+        
+        .accept-btn:hover {
+            background-color: #329268;
+        }
+        
+        .reject-btn {
+            background-color: #e74c3c;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+        
+        .reject-btn:hover {
+            background-color: #c0392b;
+        }
+        
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .status-active {
+            background-color: #e8f5e9;
+            color: #41b883;
+        }
+        
+        .status-completed {
+            background-color: #e6f2ff;
+            color: #2c7fb8;
+        }
+        
+        .status-cancelled {
+            background-color: #ffe6e6;
+            color: #e74c3c;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #777;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #ddd;
+        }
+        
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            header {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+            
+            .bed-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .action-links {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .booking-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .booking-actions {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1>Manage Rooms</h1>
+                <p>Create, edit and manage hospital rooms and bookings</p>
+            </div>
+            <a href="{{ url_for('admin_dashboard') }}" class="back-btn">← Back to Dashboard</a>
+        </header>
+
+        <div class="section create-room-section">
+            <h2>Create Room</h2>
+            <form method="POST" id="create-form">
+                <input type="hidden" name="create_room" value="1">
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Room Name</label>
+                        <input type="text" name="name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Number of Beds</label>
+                        <input type="number" id="num_beds" name="num_beds" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Price per Bed (₹)</label>
+                    <input type="number" name="price_per_bed" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Room Description (optional)</label>
+                    <textarea name="description"></textarea>
+                </div>
+                
+                <div class="btn-group">
+                    <button type="button" class="btn-secondary" onclick="generateBeds()">Generate Beds</button>
+                    <button type="button" class="btn-danger" onclick="clearLayout()">Clear Layout</button>
+                </div>
+                
+                <div id="layout-container"></div>
+                <input type="hidden" name="layout" id="layout">
+                
+                <button type="submit" class="btn-primary">Save Room</button>
+            </form>
+        </div>
+
+        <div class="section manage-rooms-section">
+            <h2>Manage Rooms</h2>
+            <input type="text" class="search-input" placeholder="Search rooms...">
+            
+            {% if rooms %}
+                {% for room in rooms %}
+                    <div class="bed-item">
+                        <div class="room-name">{{ room.name }}</div>
+                        <div class="action-links">
+                            <a href="{{ url_for('admin_edit_room', room_id=room.id) }}" class="action-link edit-link">Edit</a>
+                            <a href="{{ url_for('admin_edit_room', room_id=room.id) }}" class="action-link view-link">View</a>
+                            <a href="{{ url_for('admin_delete_room', room_id=room.id) }}" class="action-link delete-link">Delete</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <p>No rooms found. Create your first room above.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="section booking-section">
+            <h2>Booking Requests</h2>
+            
+            <h3>Active Bookings</h3>
+            {% if active_bookings %}
+                {% for booking in active_bookings %}
+                    <div class="booking-item">
+                        <div class="booking-header">
+                            <div class="patient-name">{{ booking.patient_name }}</div>
+                            <div class="status-badge status-active">Active</div>
+                        </div>
+                        <div class="booking-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Contact:</span>
+                                <span>{{ booking.contact_number }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Age:</span>
+                                <span>{{ booking.age }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Condition:</span>
+                                <span>{{ booking.medical_condition }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Stay:</span>
+                                <span>{{ booking.estimated_stay }} days</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Check-in:</span>
+                                <span>{{ booking.check_in_date }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Room:</span>
+                                <span>{{ booking.bed.room.name }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Bed:</span>
+                                <span>{{ booking.bed.bed_number }}</span>
+                            </div>
+                        </div>
+                        <div class="booking-actions">
+                            <a href="{{ url_for('admin_accept_booking', booking_id=booking.id) }}" class="accept-btn">Accept</a>
+                            <a href="{{ url_for('admin_reject_booking', booking_id=booking.id) }}" class="reject-btn">Reject</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <p>No active booking requests.</p>
+                </div>
+            {% endif %}
+            
+            <h3>Booking History</h3>
+            {% if history_bookings %}
+                {% for booking in history_bookings %}
+                    <div class="booking-item">
+                        <div class="booking-header">
+                            <div class="patient-name">{{ booking.patient_name }}</div>
+                            <div class="status-badge 
+                                {% if booking.status == 'completed' %}status-completed
+                                {% elif booking.status == 'cancelled' %}status-cancelled
+                                {% else %}status-active{% endif %}">
+                                {{ booking.status }}
+                            </div>
+                        </div>
+                        <div class="booking-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Check-in:</span>
+                                <span>{{ booking.check_in_date }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Status:</span>
+                                <span>{{ booking.status }}</span>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <p>No booking history available.</p>
+                </div>
+            {% endif %}
+
+            <h3>Confirmed Bookings</h3>
+            {% if confirmed_bookings %}
+                {% for booking in confirmed_bookings %}
+                    <div class="booking-item">
+                        <div class="booking-header">
+                            <div class="patient-name">{{ booking.patient_name }}</div>
+                            <div class="status-badge status-completed">Paid</div>
+                        </div>
+                        <div class="booking-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Contact:</span>
+                                <span>{{ booking.contact_number }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Age:</span>
+                                <span>{{ booking.age }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Condition:</span>
+                                <span>{{ booking.medical_condition }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Stay:</span>
+                                <span>{{ booking.estimated_stay }} days</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Check-in:</span>
+                                <span>{{ booking.check_in_date }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Room:</span>
+                                <span>{{ booking.bed.room.name }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Bed:</span>
+                                <span>{{ booking.bed.bed_number }}</span>
+                            </div>
+                        </div>
+                        <div class="booking-actions">
+                            <a href="{{ url_for('download_bill', booking_id=booking.id) }}" class="accept-btn">Download Bill</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <p>No confirmed bookings.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        const container = document.getElementById('layout-container');
+        container.addEventListener('mousedown', function(e) {
+            if (e.target.tagName === 'DIV' && e.target.parentNode === container) {
+                let bed = e.target;
+                let shiftX = e.clientX - bed.getBoundingClientRect().left;
+                let shiftY = e.clientY - bed.getBoundingClientRect().top;
+                function moveAt(pageX, pageY) {
+                    let newLeft = pageX - shiftX - container.getBoundingClientRect().left;
+                    let newTop = pageY - shiftY - container.getBoundingClientRect().top;
+                    newLeft = Math.max(0, Math.min(container.clientWidth - bed.offsetWidth, newLeft));
+                    newTop = Math.max(0, Math.min(container.clientHeight - bed.offsetHeight, newTop));
+                    bed.style.left = newLeft + 'px';
+                    bed.style.top = newTop + 'px';
+                }
+                function onMouseMove(e) {
+                    moveAt(e.pageX, e.pageY);
+                }
+                document.addEventListener('mousemove', onMouseMove);
+                document.addEventListener('mouseup', function() {
+                    document.removeEventListener('mousemove', onMouseMove);
+                }, {once: true});
+            }
+        });
+        container.ondragstart = function() { return false; };
+
+        function generateBeds() {
+            var num = document.getElementById('num_beds').value;
+            container.innerHTML = '';
+            for (var i = 0; i < num; i++) {
+                var bed = document.createElement('div');
+                bed.className = 'bed-element';
+                bed.innerText = 'Bed ' + (i + 1);
+                bed.style.left = (i % 5 * 100) + 'px';
+                bed.style.top = Math.floor(i / 5) * 50 + 'px';
+                container.appendChild(bed);
+            }
+        }
+
+        function clearLayout() {
+            container.innerHTML = '';
+        }
+
+        document.getElementById('create-form').onsubmit = function() {
+            var beds = document.querySelectorAll('#layout-container div');
+            var layout = [];
+            beds.forEach((bed, i) => {
+                layout.push({
+                    number: i + 1,
+                    left: bed.style.left,
+                    top: bed.style.top
+                });
+            });
+            document.getElementById('layout').value = JSON.stringify(layout);
+            return true;
+        }
+    </script>
+</body>
+</html>

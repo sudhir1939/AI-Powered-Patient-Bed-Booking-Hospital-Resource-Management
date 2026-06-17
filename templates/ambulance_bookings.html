@@ -1,0 +1,366 @@
+<!-- ambulance_bookings.html (Full updated code) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Bookings - Ambulance Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+       
+        body {
+            background-color: #f0f8ff;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+       
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            flex: 1;
+        }
+       
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+       
+        .header-content h1 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+       
+        .back-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+       
+        .back-btn:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+       
+        .sections {
+            display: grid;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+       
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+       
+        .pending-section {
+            border-top: 5px solid #f39c12;
+        }
+       
+        .accepted-section {
+            border-top: 5px solid #41b883;
+        }
+       
+        .paid-section {
+            border-top: 5px solid #2c7fb8;
+        }
+       
+        h2 {
+            color: #e74c3c;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+       
+        .pending-section h2 {
+            color: #f39c12;
+        }
+       
+        .accepted-section h2 {
+            color: #41b883;
+        }
+       
+        .paid-section h2 {
+            color: #2c7fb8;
+        }
+       
+        .booking-list {
+            list-style-type: none;
+        }
+       
+        .booking-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s ease;
+        }
+       
+        .booking-item:hover {
+            background-color: #f9f9f9;
+        }
+       
+        .booking-info {
+            flex: 1;
+        }
+       
+        .booking-name {
+            font-weight: 600;
+            color: #e74c3c;
+            margin-bottom: 5px;
+        }
+       
+        .booking-details {
+            font-size: 0.9rem;
+            color: #666;
+        }
+       
+        .booking-actions {
+            display: flex;
+            gap: 10px;
+        }
+       
+        .action-btn {
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+       
+        .accept-btn {
+            background-color: #e6f7ff;
+            color: #41b883;
+        }
+       
+        .accept-btn:hover {
+            background-color: #41b883;
+            color: white;
+        }
+       
+        .reject-btn {
+            background-color: #ffe6e6;
+            color: #e74c3c;
+        }
+       
+        .reject-btn:hover {
+            background-color: #e74c3c;
+            color: white;
+        }
+       
+        .share-location-btn {
+            background-color: #e6f2ff;
+            color: #2c7fb8;
+        }
+       
+        .share-location-btn:hover {
+            background-color: #2c7fb8;
+            color: white;
+        }
+       
+        .empty-state {
+            text-align: center;
+            padding: 30px;
+            color: #777;
+        }
+       
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #ddd;
+        }
+       
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+            font-size: 0.9rem;
+            margin-top: 30px;
+        }
+       
+        @media (max-width: 768px) {
+            .sections {
+                grid-template-columns: 1fr;
+            }
+           
+            header {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+           
+            .booking-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+           
+            .booking-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1><i class="fas fa-calendar-check"></i> View Bookings</h1>
+                <p>Manage incoming ambulance booking requests</p>
+            </div>
+            <a href="{{ url_for('ambulance_dashboard') }}" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </header>
+       
+        <div class="sections">
+            <div class="card pending-section">
+                <h2><i class="fas fa-clock"></i> Pending Bookings</h2>
+                {% if pending_bookings %}
+                    <ul class="booking-list">
+                        {% for booking in pending_bookings %}
+                            <li class="booking-item">
+                                <div class="booking-info">
+                                    <div class="booking-name">
+                                        {{ booking.patient.name }} ({{ booking.use_type }})
+                                    </div>
+                                    <div class="booking-details">
+                                        Vehicle: {{ booking.vehicle.name }} | Created: {{ booking.created_at.strftime('%Y-%m-%d %H:%M') }}
+                                        {% if booking.location_link %}
+                                            <br>Location Link: {{ booking.location_link }}
+                                        {% endif %}
+                                        {% if booking.payment_status == 'paid' %}
+                                            <br>Prepaid: Yes (Emergency)
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="booking-actions">
+                                    <a href="{{ url_for('ambulance_accept_booking', booking_id=booking.id) }}" class="action-btn accept-btn">
+                                        <i class="fas fa-check"></i> Accept
+                                    </a>
+                                    <a href="{{ url_for('ambulance_reject_booking', booking_id=booking.id) }}" class="action-btn reject-btn" onclick="return confirm('Reject this booking?')">
+                                        <i class="fas fa-times"></i> Reject
+                                    </a>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <div class="empty-state">
+                        <i class="fas fa-clock"></i>
+                        <h3>No Pending Bookings</h3>
+                        <p>No new booking requests at the moment.</p>
+                    </div>
+                {% endif %}
+            </div>
+           
+            <div class="card accepted-section">
+                <h2><i class="fas fa-check-circle"></i> Accepted Bookings</h2>
+                {% if accepted_bookings %}
+                    <ul class="booking-list">
+                        {% for booking in accepted_bookings %}
+                            <li class="booking-item">
+                                <div class="booking-info">
+                                    <div class="booking-name">
+                                        {{ booking.patient.name }} ({{ booking.use_type }})
+                                    </div>
+                                    <div class="booking-details">
+                                        Vehicle: {{ booking.vehicle.name }} | Amount: ₹{{ booking.amount }}
+                                        {% if booking.live_location_link %}
+                                            <br>Your Live Location: {{ booking.live_location_link }}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="booking-actions">
+                                    <a href="{{ url_for('ambulance_share_live_location', booking_id=booking.id) }}" class="action-btn share-location-btn">
+                                        <i class="fas fa-map-marker-alt"></i> Share Live Location
+                                    </a>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <div class="empty-state">
+                        <i class="fas fa-check-circle"></i>
+                        <h3>No Accepted Bookings</h3>
+                        <p>No accepted bookings at the moment.</p>
+                    </div>
+                {% endif %}
+            </div>
+           
+            <div class="card paid-section">
+                <h2><i class="fas fa-dollar-sign"></i> Paid Bookings (History)</h2>
+                {% if paid_bookings %}
+                    <ul class="booking-list">
+                        {% for booking in paid_bookings %}
+                            <li class="booking-item">
+                                <div class="booking-info">
+                                    <div class="booking-name">
+                                        {{ booking.patient.name }} ({{ booking.use_type }})
+                                    </div>
+                                    <div class="booking-details">
+                                        Vehicle: {{ booking.vehicle.name }} | Paid: ₹{{ booking.amount }} | Date: {{ booking.created_at.strftime('%Y-%m-%d %H:%M') }}
+                                        {% if booking.location_link %}
+                                            <br>Patient Location: {{ booking.location_link }}
+                                        {% endif %}
+                                        {% if booking.live_location_link %}
+                                            <br>Current Live Location: {{ booking.live_location_link }}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="booking-actions">
+                                    <a href="{{ url_for('ambulance_share_live_location', booking_id=booking.id) }}" class="action-btn share-location-btn">
+                                        <i class="fas fa-map-marker-alt"></i> Update Live Location
+                                    </a>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <div class="empty-state">
+                        <i class="fas fa-dollar-sign"></i>
+                        <h3>No Paid Bookings</h3>
+                        <p>No completed bookings yet.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+       
+        <footer>
+            <p>© 2023 Hospital Resources Management System. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,304 @@
+<!-- bill.html (Full updated code - unchanged, but provided as requested) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill Details</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+       
+        body {
+            background-color: #f0f8ff;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+       
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+       
+        .bill-header {
+            background: linear-gradient(135deg, #2c7fb8 0%, #236699 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+       
+        .bill-header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+       
+        .bill-header p {
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+       
+        .bill-content {
+            padding: 30px;
+        }
+       
+        .bill-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+       
+        .bill-section {
+            background-color: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 4px solid #2c7fb8;
+        }
+       
+        .bill-section h3 {
+            color: #2c7fb8;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+       
+        .bill-item {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+        }
+       
+        .bill-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+       
+        .bill-label {
+            font-weight: 600;
+            color: #555;
+        }
+       
+        .bill-value {
+            color: #333;
+            font-weight: 500;
+        }
+       
+        .amount-breakdown {
+            background-color: #e8f5e9;
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 4px solid #41b883;
+            margin-bottom: 30px;
+        }
+       
+        .amount-breakdown h3 {
+            color: #41b883;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+       
+        .calculation-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding: 8px 0;
+        }
+       
+        .calculation-total {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid #41b883;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #41b883;
+        }
+       
+        .payment-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+       
+        .btn {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            font-size: 1rem;
+            flex: 1;
+            justify-content: center;
+        }
+       
+        .btn-primary {
+            background: linear-gradient(135deg, #41b883 0%, #329268 100%);
+            color: white;
+        }
+       
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(65, 184, 131, 0.3);
+        }
+       
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+       
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            transform: translateY(-2px);
+        }
+       
+        .hospital-info {
+            background-color: #e6f2ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            text-align: center;
+            border-left: 4px solid #2c7fb8;
+        }
+       
+        .hospital-name {
+            font-weight: 700;
+            color: #2c7fb8;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+       
+        .hospital-contact {
+            color: #555;
+            font-size: 0.9rem;
+        }
+       
+        @media (max-width: 768px) {
+            .bill-info {
+                grid-template-columns: 1fr;
+            }
+           
+            .payment-actions {
+                flex-direction: column;
+            }
+           
+            .bill-header h1 {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="bill-header">
+            <h1>Bill Details</h1>
+            <p>Review your booking information and proceed to payment</p>
+        </div>
+       
+        <div class="bill-content">
+            <div class="bill-info">
+                <div class="bill-section">
+                    <h3>👤 Patient Information</h3>
+                    <div class="bill-item">
+                        <span class="bill-label">Patient Name</span>
+                        <span class="bill-value">{{ booking.patient_name }}</span>
+                    </div>
+                   
+                    <div class="bill-item">
+                        <span class="bill-label">Contact Number</span>
+                        <span class="bill-value">{{ booking.contact_number }}</span>
+                    </div>
+                   
+                    <div class="bill-item">
+                        <span class="bill-label">Age</span>
+                        <span class="bill-value">{{ booking.age }}</span>
+                    </div>
+                   
+                    <div class="bill-item">
+                        <span class="bill-label">Medical Condition</span>
+                        <span class="bill-value">{{ booking.medical_condition or 'N/A' }}</span>
+                    </div>
+                </div>
+               
+                <div class="bill-section">
+                    <h3>🏥 Booking Details</h3>
+                    <div class="bill-item">
+                        <span class="bill-label">Check-in Date</span>
+                        <span class="bill-value">{{ booking.check_in_date }}</span>
+                    </div>
+                   
+                    <div class="bill-item">
+                        <span class="bill-label">Estimated Stay</span>
+                        <span class="bill-value">{{ booking.estimated_stay }} days</span>
+                    </div>
+                   
+                    <div class="bill-item">
+                        <span class="bill-label">Room</span>
+                        <span class="bill-value">{{ room.name }}</span>
+                    </div>
+                   
+                    <div class="bill-item">
+                        <span class="bill-label">Bed Number</span>
+                        <span class="bill-value">{{ bed.bed_number }}</span>
+                    </div>
+                </div>
+            </div>
+           
+            <div class="amount-breakdown">
+                <h3>💰 Amount Breakdown</h3>
+                <div class="calculation-item">
+                    <span class="bill-label">Price per Bed per Day</span>
+                    <span class="bill-value">₹{{ room.price_per_bed }}</span>
+                </div>
+               
+                <div class="calculation-item">
+                    <span class="bill-label">Estimated Stay</span>
+                    <span class="bill-value">{{ booking.estimated_stay }} days</span>
+                </div>
+               
+                <div class="calculation-item">
+                    <span class="bill-label">Subtotal</span>
+                    <span class="bill-value">₹{{ room.price_per_bed * booking.estimated_stay }}</span>
+                </div>
+               
+                <div class="calculation-total">
+                    <span class="bill-label">Total Amount</span>
+                    <span class="bill-value">₹{{ amount }}</span>
+                </div>
+            </div>
+           
+            <div class="payment-actions">
+                <a href="{{ url_for('patient_dashboard') }}" class="btn btn-secondary">← Back to Dashboard</a>
+                <a href="{{ url_for('patient_pay', booking_id=booking.id) }}" class="btn btn-primary">
+                    💳 Proceed to Payment
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

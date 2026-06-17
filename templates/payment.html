@@ -1,0 +1,86 @@
+<!-- payment.html (new, for bed and ambulance) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pay with Razorpay</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            text-align: center;
+            padding: 50px;
+        }
+        
+        h1 {
+            margin-bottom: 30px;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            background-color: #41b883;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .btn:hover {
+            background-color: #329268;
+        }
+    </style>
+</head>
+<body>
+    <h1>Complete Your Payment</h1>
+    <button id="rzp-button1" class="btn">Pay Now ₹{{ amount }}</button>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+    var options = {
+        "key": "{{ key }}",
+        "amount": {{ order.amount }},
+        "currency": "{{ order.currency }}",
+        "name": "Hospital Management System",
+        "description": "Payment for Booking",
+        "order_id": "{{ order.id }}",
+        "handler": function (response){
+            var form = document.createElement("form");
+            form.setAttribute("method", "POST");
+            form.setAttribute("action", "{{ success_url }}");
+
+            var hiddenField1 = document.createElement("input");
+            hiddenField1.setAttribute("type", "hidden");
+            hiddenField1.setAttribute("name", "razorpay_order_id");
+            hiddenField1.setAttribute("value", response.razorpay_order_id);
+            form.appendChild(hiddenField1);
+
+            var hiddenField2 = document.createElement("input");
+            hiddenField2.setAttribute("type", "hidden");
+            hiddenField2.setAttribute("name", "razorpay_payment_id");
+            hiddenField2.setAttribute("value", response.razorpay_payment_id);
+            form.appendChild(hiddenField2);
+
+            var hiddenField3 = document.createElement("input");
+            hiddenField3.setAttribute("type", "hidden");
+            hiddenField3.setAttribute("name", "razorpay_signature");
+            hiddenField3.setAttribute("value", response.razorpay_signature);
+            form.appendChild(hiddenField3);
+
+            document.body.appendChild(form);
+            form.submit();
+        },
+        "theme": {
+            "color": "#41b883"
+        }
+    };
+    var rzp1 = new Razorpay(options);
+    document.getElementById('rzp-button1').onclick = function(e){
+        rzp1.open();
+        e.preventDefault();
+    }
+    </script>
+</body>
+</html>

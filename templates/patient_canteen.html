@@ -1,0 +1,241 @@
+<!-- patient_canteen.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ canteen.name }} - Menu</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .item-row:hover { background-color: #f8f9fa; }
+    .selected { background-color: #d4edda !important; }
+    .quantity-input { width: 60px; }
+  </style>
+</head>
+<body>
+  <div class="container mt-4">
+    <div class="card shadow">
+      <div class="card-header bg-primary text-white">
+        <h2 class="mb-0">{{ canteen.name }} Menu</h2>
+      </div>
+      <div class="card-body">
+        <form method="POST" action="{{ url_for('patient_submit_canteen_order', canteen_id=canteen.id) }}">
+          <table class="table table-hover">
+            <thead class="table-light">
+              <tr>
+                <th>Category</th>
+                <th>Item</th>
+                <th>Price</th>
+                <th>Qty</th>
+                <th>Add</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for category in categories %}
+                <tr class="table-secondary fw-bold">
+                  <td colspan="5">{{ category.name }}</td>
+                </tr>
+                {% for item in category.items %}
+                  <tr class="item-row" data-id="{{ item.id }}" data-price="{{ item.price }}">
+                    <td></td>
+                    <td>{{ item.name }}</td>
+                    <td>₹<span class="item-price">{{ item.price }}</span></td>
+                    <td>
+                      <input type="number" class="form-control quantity-input d-none" min="1" value="1">
+                    </td>
+                    <td>
+                      <button type="button" class="btn btn-outline-primary btn-sm add-btn">Add</button>
+                    </td>
+                  </tr>
+                {% endfor %}
+              {% endfor %}
+            </tbody>
+          </table>
+          <div class="card mt-4">
+            <div class="card-header">
+              <h4>Order Summary</h4>
+            </div>
+            <div class="card-body">
+              <table class="table" id="order-summary">
+                <thead>
+                  <tr>
+                    <th>Item</th>
+                    <th>Qty</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+              <h5>Total: ₹<span id="grand-total">0.00</span></h5>
+            </div>
+          </div>
+          <!-- New Location Selection Dropdowns -->
+          <div class="card mt-4">
+            <div class="card-header">
+              <h4>Delivery Location</h4>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <label for="room_id">Select Room</label>
+                  <select name="room_id" id="room_id" class="form-select">
+                    <option value="">Choose Room (or Pickup at Canteen)</option>
+                    {% for room in rooms %}
+                      <option value="{{ room.id }}">{{ room.name }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <label for="bed_id">Select Bed</label>
+                  <select name="bed_id" id="bed_id" class="form-select" disabled>
+                    <option value="">First select room</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <input type="hidden" name="selected_items" id="selected-items">
+          <button type="submit" class="btn btn-success btn-lg w-100 mt-3">Place Order</button>
+        </form>
+      </div>
+    </div>
+    <!-- Reviews -->
+    <div class="card mt-5 shadow">
+      <div class="card-header">
+        <h4>Reviews</h4>
+      </div>
+      <div class="card-body">
+        <form method="POST" action="{{ url_for('patient_add_canteen_review', canteen_id=canteen.id) }}" class="mb-4">
+          <div class="row">
+            <div class="col-md-2">
+              <label>Rating</label>
+              <select name="rating" class="form-select" required>
+                <option value="5">5 Stars</option>
+                <option value="4">4 Stars</option>
+                <option value="3">3 Stars</option>
+                <option value="2">2 Stars</option>
+                <option value="1">1 Star</option>
+              </select>
+            </div>
+            <div class="col-md-8">
+              <label>Comment</label>
+              <textarea name="text" class="form-control" rows="2"></textarea>
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+              <button type="submit" class="btn btn-primary w-100">Submit</button>
+            </div>
+          </div>
+        </form>
+        {% for review in reviews %}
+          <div class="border p-3 mb-3 rounded">
+            <strong>{{ review.rating }} Stars</strong> by <em>{{ review.patient.name }}</em>
+            <p class="mb-1">{{ review.text }}</p>
+            <small class="text-muted">{{ review.created_at.strftime('%b %d, %Y') }}</small>
+            {% if review.patient_id == session.get('user_id', 0) %}
+              <div class="mt-2">
+                <a href="{{ url_for('patient_edit_canteen_review', review_id=review.id) }}" class="btn btn-sm btn-outline-warning">Edit</a>
+                <a href="{{ url_for('patient_delete_canteen_review', review_id=review.id) }}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete?')">Delete</a>
+              </div>
+            {% endif %}
+          </div>
+        {% else %}
+          <p class="text-muted">No reviews yet.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <script>
+    const cart = {};
+    const bedsByRoom = {{ beds_by_room | tojson }};
+    document.querySelectorAll('.add-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const row = btn.closest('tr');
+        const id = row.dataset.id;
+        const name = row.cells[1].textContent.trim();
+        const price = parseFloat(row.dataset.price);
+        const qtyInput = row.querySelector('.quantity-input');
+        qtyInput.classList.toggle('d-none');
+        if (!cart[id]) {
+          cart[id] = { name, price, qty: 1 };
+          qtyInput.value = 1;
+          addToSummary(id, name, price, 1);
+          row.classList.add('selected');
+          btn.textContent = 'Deselect';
+        } else {
+          delete cart[id];
+          removeFromSummary(id);
+          qtyInput.classList.add('d-none');
+          row.classList.remove('selected');
+          btn.textContent = 'Add';
+        }
+        updateHiddenInput();
+        updateTotal();
+      });
+    });
+    // Room selection logic
+    document.getElementById('room_id').addEventListener('change', function() {
+      const roomId = this.value;
+      const bedSelect = document.getElementById('bed_id');
+      bedSelect.innerHTML = '<option value="">Choose Bed</option>';
+      bedSelect.disabled = !roomId;
+      if (roomId && bedsByRoom[roomId]) {
+        bedsByRoom[roomId].forEach(bed => {
+          const option = document.createElement('option');
+          option.value = bed.id;
+          option.textContent = `Bed ${bed.bed_number}`;
+          bedSelect.appendChild(option);
+        });
+      }
+    });
+    function addToSummary(id, name, price, qty) {
+      const tbody = document.querySelector('#order-summary tbody');
+      const tr = document.createElement('tr');
+      tr.dataset.id = id;
+      tr.innerHTML = `
+        <td>${name}</td>
+        <td><input type="number" class="form-control form-control-sm qty-input" value="${qty}" min="1" style="width:70px"></td>
+        <td>₹${price.toFixed(2)}</td>
+        <td class="item-total">₹${(price * qty).toFixed(2)}</td>
+        <td><button type="button" class="btn btn-danger btn-sm remove-btn">Remove</button></td>
+      `;
+      tbody.appendChild(tr);
+      tr.querySelector('.qty-input').addEventListener('input', (e) => {
+        const newQty = parseInt(e.target.value) || 1;
+        cart[id].qty = newQty;
+        tr.querySelector('.item-total').textContent = `$${(price * newQty).toFixed(2)}`;
+        updateHiddenInput();
+        updateTotal();
+      });
+      tr.querySelector('.remove-btn').addEventListener('click', () => {
+        delete cart[id];
+        tr.remove();
+        document.querySelector(`tr.item-row[data-id="${id}"] .quantity-input`).classList.add('d-none');
+        document.querySelector(`tr.item-row[data-id="${id}"]`).classList.remove('selected');
+        document.querySelector(`tr.item-row[data-id="${id}"] .add-btn`).textContent = 'Add';
+        updateHiddenInput();
+        updateTotal();
+      });
+    }
+    function removeFromSummary(id) {
+      const tr = document.querySelector(`#order-summary tr[data-id="${id}"]`);
+      if (tr) tr.remove();
+    }
+    function updateHiddenInput() {
+      const data = {};
+      Object.keys(cart).forEach(id => {
+        data[id] = cart[id].qty;
+      });
+      document.getElementById('selected-items').value = JSON.stringify(data);
+    }
+    function updateTotal() {
+      let total = 0;
+      Object.values(cart).forEach(item => {
+        total += item.price * item.qty;
+      });
+      document.getElementById('grand-total').textContent = total.toFixed(2);
+    }
+  </script>
+</body>
+</html>

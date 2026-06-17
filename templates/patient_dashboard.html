@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Dashboard - Hospital Resources Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+ 
+        body {
+            background-color: #f0f8ff;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+ 
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            flex: 1;
+        }
+ 
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background: linear-gradient(135deg, #41b883 0%, #329268 100%);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+ 
+        .header-content h1 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+ 
+        .header-content p {
+            opacity: 0.9;
+        }
+ 
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .notification-bell {
+            position: relative;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .notification-bell:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #e74c3c;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: bold;
+            padding: 3px 7px;
+            border-radius: 20px;
+            min-width: 20px;
+            text-align: center;
+        }
+ 
+        .logout-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+ 
+        .logout-btn:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+ 
+        .dashboard-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+ 
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+ 
+        .patient-info-card {
+            border-top: 5px solid #41b883;
+        }
+ 
+        .hospitals-card {
+            border-top: 5px solid #ff9f43;
+        }
+ 
+        .alert {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+ 
+        .alert ul {
+            list-style-type: none;
+        }
+ 
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .info-item {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+ 
+        .info-label {
+            font-weight: 600;
+            color: #555;
+            display: block;
+            margin-bottom: 5px;
+        }
+ 
+        .info-value {
+            color: #333;
+        }
+ 
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+ 
+        .status-active {
+            background-color: #e8f5e9;
+            color: #41b883;
+        }
+ 
+        h2 {
+            color: #41b883;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+ 
+        .hospitals-card h2 {
+            color: #ff9f43;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .edit-info-btn {
+            background-color: #2c7fb8;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 5px;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .edit-info-btn:hover {
+            background-color: #1d5f8a;
+        }
+
+        /* Search Bar Styles */
+        .search-container {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 12px 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .search-bar:focus {
+            outline: none;
+            border-color: #2c7fb8;
+            box-shadow: 0 0 0 2px rgba(44, 127, 184, 0.2);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+            font-size: 1.2rem;
+        }
+ 
+        .hospitals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+ 
+        .hospital-item {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            border-left: 4px solid #ff9f43;
+        }
+
+        .hospital-item.hidden {
+            display: none;
+        }
+ 
+        .hospital-item:hover {
+            background-color: #f0f0f0;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+ 
+        .hospital-name {
+            font-weight: 600;
+            color: #ff9f43;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+ 
+        .hospital-details {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 15px;
+        }
+ 
+        .view-hospital-btn {
+            background-color: #ff9f43;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+ 
+        .view-hospital-btn:hover {
+            background-color: #e67e22;
+        }
+ 
+        .empty-state {
+            text-align: center;
+            padding: 30px;
+            color: #777;
+        }
+ 
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #ddd;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #777;
+            display: none;
+        }
+
+        .no-results i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #ddd;
+        }
+ 
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+            font-size: 0.9rem;
+            margin-top: 30px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 900px;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #41b883 0%, #329268 100%);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            color: white;
+            margin: 0;
+        }
+
+        .close-modal {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .close-modal:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .modal-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #e0e0e0;
+            overflow-x: auto;
+        }
+
+        .modal-tab {
+            padding: 12px 25px;
+            background: transparent;
+            border: none;
+            color: #666;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 5px 5px 0 0;
+            white-space: nowrap;
+        }
+
+        .modal-tab.active {
+            background-color: #41b883;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .notification-section {
+            margin-bottom: 30px;
+        }
+
+        .notification-section h3 {
+            color: #41b883;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .notification-list, .pending-list, .history-list {
+            list-style-type: none;
+        }
+
+        .notification-list li, .pending-list li, .history-list li {
+            padding: 15px;
+            margin-bottom: 12px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            border-left: 4px solid #e74c3c;
+            transition: all 0.3s ease;
+        }
+
+        .notification-list li:hover, .pending-list li:hover, .history-list li:hover {
+            transform: translateX(5px);
+            background-color: #f0f0f0;
+        }
+
+        .pending-list li {
+            border-left-color: #f39c12;
+        }
+
+        .history-list li {
+            border-left-color: #2c7fb8;
+        }
+
+        .pay-btn, .download-btn, .location-btn {
+            background-color: #41b883;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            margin-right: 8px;
+            display: inline-block;
+            margin-top: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .pay-btn:hover, .download-btn:hover, .location-btn:hover {
+            background-color: #329268;
+        }
+
+        .location-btn {
+            background-color: #2c7fb8;
+        }
+
+        .location-btn:hover {
+            background-color: #1d5f8a;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 40px;
+            color: #777;
+        }
+
+        .empty-message i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #ddd;
+        }
+
+        /* Update Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+  
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #555;
+        }
+  
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+  
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+  
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #2c7fb8;
+            box-shadow: 0 0 0 2px rgba(44, 127, 184, 0.2);
+        }
+  
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+  
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
+        }
+  
+        .update-btn {
+            background-color: #2c7fb8;
+            color: white;
+            flex: 1;
+        }
+  
+        .update-btn:hover {
+            background-color: #1d5f8a;
+        }
+  
+        /* Floating AI Button */
+        .floating-ai {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #41b883 0%, #329268 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            transition: transform 0.2s ease;
+            text-decoration: none;
+        }
+
+        .floating-ai:hover {
+            transform: scale(1.1);
+        }
+ 
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+
+            .header-actions {
+                width: 100%;
+                justify-content: center;
+            }
+      
+            .hospitals-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                width: 95%;
+                max-height: 90vh;
+            }
+
+            .modal-tabs {
+                flex-wrap: wrap;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Scrollbar Styling */
+        .modal-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #41b883 0%, #329268 100%);
+            border-radius: 10px;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1><i class="fas fa-user-injured"></i> Patient Dashboard</h1>
+                <p>Welcome to your personal health portal</p>
+            </div>
+            <div class="header-actions">
+                <div class="notification-bell" onclick="openNotificationModal()">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge" id="notificationCount">0</span>
+                </div>
+                <a href="{{ url_for('logout') }}" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </header>
+  
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="alert">
+                    <ul>
+                        {% for message in messages %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        {% endwith %}
+  
+        <div class="dashboard-content">
+            <div class="card patient-info-card">
+                <h2><i class="fas fa-id-card"></i> Patient Information</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Full Name</span>
+                        <span class="info-value">{{ patient.name }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Mobile</span>
+                        <span class="info-value">{{ patient.mobile }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Email</span>
+                        <span class="info-value">{{ patient.email }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Account Status</span>
+                        <span class="info-value">
+                            <span class="status-indicator status-active">
+                                <i class="fas fa-circle"></i> Active
+                            </span>
+                        </span>
+                    </div>
+                </div>
+                <div class="info-item" style="margin-top: 20px;">
+                    <span class="info-label">Patient Information</span>
+                    <span class="info-value">{{ patient.info or 'No additional information' }}</span>
+                </div>
+                <div class="action-buttons">
+                    <button class="edit-info-btn" onclick="openUpdateModal()">
+                        <i class="fas fa-edit"></i> Update Information
+                    </button>
+                </div>
+            </div>
+      
+            <div class="card hospitals-card">
+                <h2><i class="fas fa-hospital"></i> Available Hospitals</h2>
+                
+                {% if hospitals %}
+                    <div class="search-container">
+                        <input type="text" class="search-bar" id="hospitalSearch" placeholder="Search hospitals by name, email, or mobile..." onkeyup="searchHospitals()">
+                        <i class="fas fa-search search-icon"></i>
+                    </div>
+                    
+                    <div class="hospitals-grid" id="hospitalsGrid">
+                        {% for hospital in hospitals %}
+                            <div class="hospital-item" data-name="{{ hospital.name|lower }}" data-email="{{ hospital.email|lower }}" data-mobile="{{ hospital.mobile }}">
+                                <div class="hospital-name">
+                                    <i class="fas fa-hospital"></i> {{ hospital.name }}
+                                </div>
+                                <div class="hospital-details">
+                                    {{ hospital.email }} | {{ hospital.mobile }}
+                                </div>
+                                <a href="{{ url_for('patient_hospital', hospital_id=hospital.id) }}" class="view-hospital-btn">
+                                    <i class="fas fa-external-link-alt"></i> View Hospital
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="no-results" id="noResults">
+                        <i class="fas fa-search"></i>
+                        <h3>No hospitals found</h3>
+                        <p>Try adjusting your search terms</p>
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <i class="fas fa-hospital"></i>
+                        <h3>No Hospitals Available</h3>
+                        <p>There are currently no hospitals registered in the system.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+  
+        <footer>
+            <p>© 2023 Hospital Resources Management System. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <!-- Update Information Modal -->
+    <div class="modal" id="updateModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-edit"></i> Update Information</h2>
+                <button class="close-modal" onclick="closeUpdateModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" id="updateForm">
+                    <input type="hidden" name="edit" value="1">
+                    <div class="form-group">
+                        <label for="name"><i class="fas fa-user"></i> Full Name</label>
+                        <input type="text" id="name" name="name" value="{{ patient.name }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="mobile"><i class="fas fa-phone"></i> Mobile</label>
+                        <input type="text" id="mobile" name="mobile" value="{{ patient.mobile }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email"><i class="fas fa-envelope"></i> Email</label>
+                        <input type="email" id="email" name="email" value="{{ patient.email }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="info"><i class="fas fa-info-circle"></i> Patient Information</label>
+                        <textarea id="info" name="info" placeholder="Enter any additional information about your medical history, allergies, etc.">{{ patient.info or '' }}</textarea>
+                    </div>
+                    <div class="btn-group">
+                        <button type="submit" class="btn update-btn">
+                            <i class="fas fa-save"></i> Update Information
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Modal -->
+    <div class="modal" id="notificationModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-bell"></i> Notifications & History</h2>
+                <button class="close-modal" onclick="closeNotificationModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-tabs">
+                    <button class="modal-tab active" onclick="switchTab('notifications')">
+                        <i class="fas fa-bell"></i> Notifications
+                    </button>
+                    <button class="modal-tab" onclick="switchTab('pending')">
+                        <i class="fas fa-clock"></i> Pending
+                    </button>
+                    <button class="modal-tab" onclick="switchTab('history')">
+                        <i class="fas fa-history"></i> History
+                    </button>
+                </div>
+
+                <!-- Notifications Tab -->
+                <div class="tab-content active" id="notificationsTab">
+                    <div class="notification-section">
+                        <h3><i class="fas fa-bed"></i> Bed Notifications</h3>
+                        {% if accepted_unpaid %}
+                            <ul class="notification-list">
+                                {% for booking in accepted_unpaid %}
+                                    <li>
+                                        Your request for Bed {{ booking.bed.bed_number }} in Room {{ booking.bed.room.name }} is accepted. Please pay the bill.
+                                        <a href="{{ url_for('patient_bill', booking_id=booking.id) }}" class="pay-btn">View Bill and Pay</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <div class="empty-message">
+                                <i class="fas fa-inbox"></i>
+                                <p>No bed notifications.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="notification-section">
+                        <h3><i class="fas fa-ambulance"></i> Ambulance Notifications</h3>
+                        {% if ambulance_notifications %}
+                            <ul class="notification-list">
+                                {% for booking in ambulance_notifications %}
+                                    <li>
+                                        Your ambulance booking ({{ booking.vehicle.name }} - {{ booking.use_type }}) is accepted.
+                                        <a href="{{ url_for('patient_ambulance_bill', booking_id=booking.id) }}" class="pay-btn">Pay Bill</a>
+                                        {% if booking.live_location_link %}
+                                            <a href="{{ booking.live_location_link }}" target="_blank" class="location-btn">Get Live Location</a>
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <div class="empty-message">
+                                <i class="fas fa-inbox"></i>
+                                <p>No ambulance notifications.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="notification-section">
+                        <h3><i class="fas fa-user-nurse"></i> Nurse Notifications</h3>
+                        {% if nurse_notifications %}
+                            <ul class="notification-list">
+                                {% for booking in nurse_notifications %}
+                                    <li>
+                                        Your nurse booking ({{ booking.duration_type }} at {{ booking.location }}) is accepted.
+                                        <a href="{{ url_for('patient_nurse_bill', booking_id=booking.id) }}" class="pay-btn">Pay Bill</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <div class="empty-message">
+                                <i class="fas fa-inbox"></i>
+                                <p>No nurse notifications.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="notification-section">
+                        <h3><i class="fas fa-utensils"></i> Canteen Notifications</h3>
+                        {% if canteen_notifications %}
+                            <ul class="notification-list">
+                                {% for order in canteen_notifications %}
+                                    <li>
+                                        Your canteen order #{{ order.id }} is accepted.
+                                        <a href="{{ url_for('patient_canteen_bill', order_id=order.id) }}" class="pay-btn">Pay Bill</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <div class="empty-message">
+                                <i class="fas fa-inbox"></i>
+                                <p>No canteen notifications.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Pending Tab -->
+                <div class="tab-content" id="pendingTab">
+                    <div class="notification-section">
+                        <h3><i class="fas fa-bed"></i> Bed Pending Requests</h3>
+                        {% if pending_requests %}
+                            <ul class="pending-list">
+                                {% for booking in pending_requests %}
+                                    <li>Pending request for Bed {{ booking.bed.bed_number }} in Room {{ booking.bed.room.name }} (Created: {{ booking.created_at.strftime('%Y-%m-%d %H:%M') }})</li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <div class="empty-message">
+                                <i class="fas fa-inbox"></i>
+                                <p>No pending bed requests.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="notification-section">
+                        <h3><i class="fas fa-ambulance"></i> Ambulance Pending Requests</h3>
+                        {% if ambulance_pending %}
+                            <ul class="pending-list">
+                                {% for booking in ambulance_pending %}
+                                    <li>Pending request for Ambulance {{ booking.vehicle.name }} ({{ booking.use_type }}) (Created: {{ booking.created_at.strftime('%Y-%m-%d %H:%M') }})</li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <div class="empty-message">
+                                <i class="fas fa-inbox"></i>
+                                <p>No pending ambulance requests.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="notification-section">
+                        <h3><i class="fas fa-user-nurse"></i> Nurse Pending Requests</h3>
+                        {% if nurse_pending %}
+                            <ul class="pending-list">
+                                {% for booking in nurse_pending %}
+                                    <li>Pending request for Nurse ({{ booking.duration_type }} at {{ booking.location }}) (Created: {{ booking.created_at.strftime('%Y-%m-%d %H:%M') }})</li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <div class="empty-message">
+                                <i class="fas fa-inbox"></i>
+                                <p>No pending nurse requests.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="notification-section">
+                        <h3><i class="fas fa-utensils"></i> Canteen Pending Requests</h3>
+                        {% if canteen_pending %}
+                            <ul class="pending-list">
+                                {% for order in canteen_pending %}
+                                    <li>Pending canteen order #{{ order.id }} (Created: {{ order.created_at.strftime('%Y-%m-%d %H:%M') }})</li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <div class="empty-message">
+                                <i class="fas fa-inbox"></i>
+                                <p>No pending canteen requests.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- History Tab -->
+                <div class="tab-content" id="historyTab">
+                    <div class="notification-section">
+                        <h3><i class="fas fa-bed"></i> Bed Booking History</h3>
+                        {% if history_bookings %}
+                            <ul class="history-list">
+                                {% for booking in history_bookings %}
+                                    <li>
+                                        Booking for Bed {{ booking.bed.bed_number }} in Room {{ booking.bed.room.name }} - Status: {{ booking.status }}
+                                        {% if booking.status == 'paid' %}
+                                            <a href="{{ url_for('download_bill', booking_id=booking.id) }}" class="download-btn">Download Bill</a>
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <div class="empty-message">
+                                <i class="fas fa-inbox"></i>
+                                <p>No bed booking history.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="notification-section">
+                        <h3><i class="fas fa-ambulance"></i> Ambulance History</h3>
+                        {% if ambulance_history %}
+                            <ul class="history-list">
+                                {% for booking in ambulance_history %}
+                                    <li>
+                                        Booking for Ambulance {{ booking.vehicle.name }} - Status: {{ booking.status }}
+                                        <a href="{{ url_for('patient_download_ambulance_bill', booking_id=booking.id) }}" class="download-btn">Download Bill</a>
+                                        {% if booking.live_location_link %}
+                                            <a href="{{ booking.live_location_link }}" target="_blank" class="location-btn">Get Location</a>
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <div class="empty-message">
+                                <i class="fas fa-inbox"></i>
+                                <p>No ambulance history.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="notification-section">
+                        <h3><i class="fas fa-user-nurse"></i> Nurse History</h3>
+                        {% if nurse_history %}
+                            <ul class="history-list">
+                                {% for booking in nurse_history %}
+                                    <li>
+                                        Booking for Nurse ({{ booking.duration_type }} at {{ booking.location }}) - Status: {{ booking.status }}
+                                        <a href="{{ url_for('patient_download_nurse_bill', booking_id=booking.id) }}" class="download-btn">Download Bill</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <div class="empty-message">
+                                <i class="fas fa-inbox"></i>
+                                <p>No nurse history.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="notification-section">
+                        <h3><i class="fas fa-utensils"></i> Canteen History</h3>
+                        {% if canteen_history %}
+                            <ul class="history-list">
+                                {% for order in canteen_history %}
+                                    <li>
+                                        Canteen Order #{{ order.id }} - Status: {{ order.status }}
+                                        <a href="{{ url_for('patient_download_canteen_bill', order_id=order.id) }}" class="download-btn">Download Bill</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <div class="empty-message">
+                                <i class="fas fa-inbox"></i>
+                                <p>No canteen history.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="notification-section">
+                        <h3><i class="fas fa-calendar-check"></i> Appointment History</h3>
+                        {% if history_appointments %}
+                            <ul class="history-list">
+                                {% for appointment in history_appointments %}
+                                    <li>
+                                        Appointment with Dr. {{ appointment.doctor.name }} on {{ appointment.appointment_date }} at {{ appointment.time_slot.start_time }} - {{ appointment.time_slot.end_time }} - Status: {{ appointment.status }}
+                                        {% if appointment.status == 'paid' %}
+                                            <a href="{{ url_for('download_appointment_bill', appointment_id=appointment.id) }}" class="download-btn">Download Bill</a>
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <div class="empty-message">
+                                <i class="fas fa-inbox"></i>
+                                <p>No appointment history.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating AI Button -->
+    <a href="{{ url_for('patient_ai_chat') }}" class="floating-ai" title="Chat with AI Assistant - Harsh">
+        AI
+    </a>
+
+    <script>
+        // Calculate total notification count
+        function calculateNotificationCount() {
+            let count = 0;
+            
+            // Count bed notifications
+            count += {{ accepted_unpaid|length }};
+            
+            // Count ambulance notifications
+            count += {{ ambulance_notifications|length }};
+            
+            // Count nurse notifications
+            count += {{ nurse_notifications|length }};
+            
+            // Count canteen notifications
+            count += {{ canteen_notifications|length }};
+            
+            // Count pending requests
+            count += {{ pending_requests|length }};
+            count += {{ ambulance_pending|length }};
+            count += {{ nurse_pending|length }};
+            count += {{ canteen_pending|length }};
+            
+            return count;
+        }
+
+        // Update notification badge
+        document.addEventListener('DOMContentLoaded', function() {
+            const count = calculateNotificationCount();
+            const badge = document.getElementById('notificationCount');
+            if (count > 0) {
+                badge.textContent = count > 99 ? '99+' : count;
+            } else {
+                badge.style.display = 'none';
+            }
+        });
+
+        // Open notification modal
+        function openNotificationModal() {
+            document.getElementById('notificationModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Close notification modal
+        function closeNotificationModal() {
+            document.getElementById('notificationModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Open update modal
+        function openUpdateModal() {
+            document.getElementById('updateModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Close update modal
+        function closeUpdateModal() {
+            document.getElementById('updateModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Switch tabs in notification modal
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active class from all tab buttons
+            document.querySelectorAll('.modal-tab').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            if (tabName === 'notifications') {
+                document.getElementById('notificationsTab').classList.add('active');
+                event.target.classList.add('active');
+            } else if (tabName === 'pending') {
+                document.getElementById('pendingTab').classList.add('active');
+                event.target.classList.add('active');
+            } else if (tabName === 'history') {
+                document.getElementById('historyTab').classList.add('active');
+                event.target.classList.add('active');
+            }
+        }
+
+        // Search hospitals function
+        function searchHospitals() {
+            const searchTerm = document.getElementById('hospitalSearch').value.toLowerCase();
+            const hospitalItems = document.querySelectorAll('.hospital-item');
+            const noResults = document.getElementById('noResults');
+            let visibleCount = 0;
+
+            hospitalItems.forEach(item => {
+                const name = item.getAttribute('data-name');
+                const email = item.getAttribute('data-email');
+                const mobile = item.getAttribute('data-mobile');
+
+                if (name.includes(searchTerm) || email.includes(searchTerm) || mobile.includes(searchTerm)) {
+                    item.classList.remove('hidden');
+                    visibleCount++;
+                } else {
+                    item.classList.add('hidden');
+                }
+            });
+
+            // Show/hide no results message
+            if (visibleCount === 0) {
+                noResults.style.display = 'block';
+            } else {
+                noResults.style.display = 'none';
+            }
+        }
+
+        // Close modals when clicking outside
+        document.getElementById('notificationModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeNotificationModal();
+            }
+        });
+
+        document.getElementById('updateModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeUpdateModal();
+            }
+        });
+
+        // Close modals with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeNotificationModal();
+                closeUpdateModal();
+            }
+        });
+    </script>
+</body>
+</html>

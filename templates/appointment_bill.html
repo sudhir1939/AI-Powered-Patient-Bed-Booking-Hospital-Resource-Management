@@ -1,0 +1,320 @@
+<!-- appointment_bill.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Appointment Bill</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f8ff;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #2c7fb8 0%, #236699 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .header-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .bill-details {
+            background-color: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 4px solid #2c7fb8;
+        }
+        
+        .bill-item {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .bill-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .bill-label {
+            font-weight: 600;
+            color: #2c7fb8;
+            font-size: 1rem;
+        }
+        
+        .bill-value {
+            color: #333;
+            font-weight: 500;
+            text-align: right;
+        }
+        
+        .doctor-name {
+            font-weight: 700;
+            color: #2c7fb8;
+            font-size: 1.1rem;
+        }
+        
+        .appointment-date {
+            color: #555;
+        }
+        
+        .time-slot {
+            color: #41b883;
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .amount-section {
+            background: linear-gradient(135deg, #e8f5e9 0%, #d0e8cf 100%);
+            padding: 25px;
+            border-radius: 10px;
+            margin: 25px 0;
+            border-left: 4px solid #41b883;
+            text-align: center;
+        }
+        
+        .amount-label {
+            font-size: 1rem;
+            color: #2d5a3d;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .amount-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #41b883;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            font-size: 1rem;
+            flex: 1;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #41b883 0%, #329268 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(65, 184, 131, 0.3);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(108, 117, 125, 0.3);
+        }
+        
+        .invoice-header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .invoice-title {
+            color: #2c7fb8;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .invoice-subtitle {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .payment-info {
+            background-color: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #ffc107;
+            color: #856404;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+            }
+            
+            header {
+                padding: 25px 20px;
+            }
+            
+            header h1 {
+                font-size: 1.6rem;
+            }
+            
+            .content {
+                padding: 25px 20px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .amount-value {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-icon">🧾</div>
+            <h1>Appointment Bill</h1>
+            <p>Review your appointment details and proceed to payment</p>
+        </header>
+        
+        <div class="content">
+            <div class="invoice-header">
+                <div class="invoice-title">Medical Consultation Invoice</div>
+                <div class="invoice-subtitle">Appointment Confirmation Required</div>
+            </div>
+            
+            <div class="bill-details">
+                <div class="bill-item">
+                    <span class="bill-label">👨‍⚕️ Doctor</span>
+                    <span class="bill-value doctor-name">Dr. {{ doctor.name }}</span>
+                </div>
+                
+                <div class="bill-item">
+                    <span class="bill-label">📅 Appointment Date</span>
+                    <span class="bill-value appointment-date">{{ appointment.appointment_date }}</span>
+                </div>
+                
+                <div class="bill-item">
+                    <span class="bill-label">⏰ Time Slot</span>
+                    <span class="bill-value time-slot">{{ time_slot.start_time }} - {{ time_slot.end_time }}</span>
+                </div>
+                
+                <div class="bill-item">
+                    <span class="bill-label">💼 Consultation Type</span>
+                    <span class="bill-value">Medical Consultation</span>
+                </div>
+            </div>
+            
+            <div class="amount-section">
+                <div class="amount-label">Total Amount Due</div>
+                <div class="amount-value">₹{{ amount }}</div>
+            </div>
+            
+            <div class="payment-info">
+                💡 Your appointment will be confirmed only after successful payment
+            </div>
+            
+            <div class="action-buttons">
+                <a href="{{ url_for('patient_appoinment_pay', appointment_id=appointment.id) }}" class="btn btn-primary">
+                    💳 Proceed to Payment
+                </a>
+                <a href="{{ url_for('patient_dashboard') }}" class="btn btn-secondary">
+                    ← Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add some interactive effects
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add animation to amount display
+            const amountValue = document.querySelector('.amount-value');
+            amountValue.style.opacity = '0';
+            amountValue.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                amountValue.style.transition = 'all 0.5s ease';
+                amountValue.style.opacity = '1';
+                amountValue.style.transform = 'translateY(0)';
+            }, 300);
+            
+            // Add hover effects to bill items
+            const billItems = document.querySelectorAll('.bill-item');
+            billItems.forEach(item => {
+                item.addEventListener('mouseenter', function() {
+                    this.style.backgroundColor = '#f0f8ff';
+                    this.style.transform = 'translateX(5px)';
+                });
+                
+                item.addEventListener('mouseleave', function() {
+                    this.style.backgroundColor = '';
+                    this.style.transform = 'translateX(0)';
+                });
+            });
+        });
+        
+        // Print functionality (optional)
+        function printBill() {
+            window.print();
+        }
+    </script>
+</body>
+</html>

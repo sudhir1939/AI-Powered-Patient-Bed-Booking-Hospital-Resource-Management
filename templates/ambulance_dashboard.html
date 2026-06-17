@@ -1,0 +1,443 @@
+<!-- ambulance_dashboard.html (updated) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ambulance Dashboard - Hospital Resources Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f8ff;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            flex: 1;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content h1 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .header-content p {
+            opacity: 0.9;
+        }
+        
+        .logout-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .logout-btn:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .dashboard-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .ambulance-info-card {
+            border-top: 5px solid #e74c3c;
+        }
+        
+        .update-form-card {
+            border-top: 5px solid #41b883;
+        }
+        
+        .quick-actions-card {
+            border-top: 5px solid #ff9f43;
+            grid-column: 1 / -1;
+        }
+        
+        h2 {
+            color: #e74c3c;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .update-form-card h2 {
+            color: #41b883;
+        }
+        
+        .quick-actions-card h2 {
+            color: #ff9f43;
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .alert ul {
+            list-style-type: none;
+        }
+        
+        .info-item {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .info-label {
+            font-weight: 600;
+            color: #555;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .info-value {
+            color: #333;
+        }
+        
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        
+        .status-available {
+            background-color: #e8f5e9;
+            color: #41b883;
+        }
+        
+        .status-on-duty {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-under-maintenance {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #41b883;
+            box-shadow: 0 0 0 2px rgba(65, 184, 131, 0.2);
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
+        }
+        
+        .update-btn {
+            background-color: #41b883;
+            color: white;
+            flex: 1;
+        }
+        
+        .update-btn:hover {
+            background-color: #329268;
+        }
+        
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .action-btn {
+            background-color: #ffe6e6;
+            color: #e74c3c;
+            padding: 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            text-align: center;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100px;
+        }
+        
+        .action-btn:hover {
+            background-color: #e74c3c;
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .action-btn i {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .emergency-alert {
+            background-color: #fff3f3;
+            border: 2px solid #e74c3c;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .emergency-alert h3 {
+            color: #e74c3c;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+            font-size: 0.9rem;
+            margin-top: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-content {
+                grid-template-columns: 1fr;
+            }
+            
+            header {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+            
+            .actions-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .actions-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1><i class="fas fa-ambulance"></i> Ambulance Dashboard</h1>
+                <p>Emergency Response Vehicle Management</p>
+            </div>
+            <a href="{{ url_for('logout') }}" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </header>
+        
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="alert">
+                    <ul>
+                        {% for message in messages %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        <div class="dashboard-content">
+            <div class="card ambulance-info-card">
+                <h2><i class="fas fa-id-card"></i> Ambulance Information</h2>
+                <div class="info-item">
+                    <span class="info-label">Vehicle Name/Number</span>
+                    <span class="info-value">{{ ambulance.name }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Mobile</span>
+                    <span class="info-value">{{ ambulance.mobile }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Email</span>
+                    <span class="info-value">{{ ambulance.email }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Vehicle Information</span>
+                    <span class="info-value">{{ ambulance.info or 'No additional information' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Status</span>
+                    <span class="info-value">
+                        {% if ambulance.status == 'available' %}
+                            <span class="status-indicator status-available">
+                                <i class="fas fa-circle"></i> Available
+                            </span>
+                        {% elif ambulance.status == 'on duty' %}
+                            <span class="status-indicator status-on-duty">
+                                <i class="fas fa-circle"></i> On Duty
+                            </span>
+                        {% else %}
+                            <span class="status-indicator status-under-maintenance">
+                                <i class="fas fa-circle"></i> Under Maintenance
+                            </span>
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+            
+            <div class="card update-form-card">
+                <h2><i class="fas fa-edit"></i> Update Information</h2>
+                <form method="POST">
+                    <input type="hidden" name="edit" value="1">
+                    <div class="form-group">
+                        <label for="name">Vehicle Name/Number</label>
+                        <input type="text" id="name" name="name" value="{{ ambulance.name }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="mobile">Mobile</label>
+                        <input type="text" id="mobile" name="mobile" value="{{ ambulance.mobile }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" value="{{ ambulance.email }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="info">Vehicle Information</label>
+                        <textarea id="info" name="info">{{ ambulance.info or '' }}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                        <select id="status" name="status" required>
+                            <option value="available" {% if ambulance.status == 'available' %}selected{% endif %}>Available</option>
+                            <option value="on duty" {% if ambulance.status == 'on duty' %}selected{% endif %}>On Duty</option>
+                            <option value="under maintenance" {% if ambulance.status == 'under maintenance' %}selected{% endif %}>Under Maintenance</option>
+                        </select>
+                    </div>
+                    <div class="btn-group">
+                        <button type="submit" class="btn update-btn">Update Information</button>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="card quick-actions-card">
+                <h2><i class="fas fa-tasks"></i> Quick Actions</h2>
+                <div class="actions-grid">
+                    <a href="{{ url_for('ambulance_vehicles') }}" class="action-btn">
+                        <i class="fas fa-car"></i>
+                        <span>Manage Vehicles</span>
+                    </a>
+                    <a href="{{ url_for('ambulance_bookings') }}" class="action-btn">
+                        <i class="fas fa-calendar-check"></i>
+                        <span>View Bookings</span>
+                    </a>
+                    <a href="{{ url_for('ambulance_reviews') }}" class="action-btn">
+                        <i class="fas fa-star"></i>
+                        <span>Manage Reviews</span>
+                    </a>
+                </div>
+                
+                <div class="emergency-alert">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Emergency Response</h3>
+                    <p>For immediate emergency dispatch, contact hospital control room.</p>
+                    <p><small>Current Response Time: <strong>4 minutes</strong></small></p>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2023 Hospital Resources Management System. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>

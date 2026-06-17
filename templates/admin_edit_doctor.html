@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Doctor - Hospital Resources Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f8ff;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            flex: 1;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background-color: #2c7fb8;
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content h1 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .header-content p {
+            opacity: 0.9;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
+        }
+        
+        .back-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        
+        .back-btn:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .edit-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 30px 0;
+        }
+        
+        .edit-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            border-top: 5px solid #2c7fb8;
+        }
+        
+        .edit-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .edit-header h2 {
+            color: #2c7fb8;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .edit-header p {
+            color: #777;
+        }
+        
+        .doctor-info {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 25px;
+            border-left: 4px solid #2c7fb8;
+        }
+        
+        .info-item {
+            margin-bottom: 8px;
+            display: flex;
+        }
+        
+        .info-label {
+            font-weight: 600;
+            color: #555;
+            min-width: 100px;
+        }
+        
+        .info-value {
+            color: #333;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #2c7fb8;
+            box-shadow: 0 0 0 2px rgba(44, 127, 184, 0.2);
+        }
+        
+        .btn-group-form {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+        
+        .update-btn {
+            background-color: #2c7fb8;
+            color: white;
+            flex: 2;
+        }
+        
+        .update-btn:hover {
+            background-color: #1d5f8a;
+        }
+        
+        .cancel-btn {
+            background-color: #f0f0f0;
+            color: #333;
+            flex: 1;
+        }
+        
+        .cancel-btn:hover {
+            background-color: #ddd;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+            font-size: 0.9rem;
+            margin-top: auto;
+        }
+        
+        @media (max-width: 768px) {
+            .edit-card {
+                padding: 25px;
+            }
+            
+            header {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+            
+            .btn-group {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .btn-group-form {
+                flex-direction: column;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1><i class="fas fa-user-md"></i> Edit Doctor</h1>
+                <p>Update doctor information in the system</p>
+            </div>
+            <div class="btn-group">
+                <a href="{{ url_for('admin_doctors') }}" class="btn back-btn">
+                    <i class="fas fa-arrow-left"></i> Back to Doctors
+                </a>
+            </div>
+        </header>
+        
+        <div class="edit-container">
+            <div class="edit-card">
+                <div class="edit-header">
+                    <h2><i class="fas fa-edit"></i> Update Doctor Details</h2>
+                    <p>Modify the information for {{ doctor.name }}</p>
+                </div>
+                
+                <div class="doctor-info">
+                    <div class="info-item">
+                        <span class="info-label">Username:</span>
+                        <span class="info-value">{{ doctor.username }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Status:</span>
+                        <span class="info-value">Active</span>
+                    </div>
+                </div>
+                
+                <form method="POST">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" name="name" value="{{ doctor.name }}" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="mobile">Mobile Number</label>
+                        <input type="text" id="mobile" name="mobile" value="{{ doctor.mobile }}" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" value="{{ doctor.email }}" required>
+                    </div>
+                    
+                    <div class="btn-group-form">
+                        <button type="submit" class="btn update-btn">
+                            <i class="fas fa-save"></i> Update Doctor
+                        </button>
+                        <a href="{{ url_for('admin_doctors') }}" class="btn cancel-btn">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2023 Hospital Resources Management System. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!-- patient_edit_ambulance_review.html (new) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Review</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f8ff;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-top: 5px solid #ff9f43;
+        }
+        
+        h1 {
+            color: #ff9f43;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #ff9f43;
+            box-shadow: 0 0 0 2px rgba(255, 159, 67, 0.2);
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .update-btn {
+            background-color: #ff9f43;
+            color: white;
+        }
+        
+        .update-btn:hover {
+            background-color: #e67e22;
+        }
+        
+        .cancel-btn {
+            background-color: #6c757d;
+            color: white;
+        }
+        
+        .cancel-btn:hover {
+            background-color: #545b62;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>Edit Review</h1>
+            <form method="POST">
+                <div class="form-group">
+                    <label for="rating">Rating</label>
+                    <select id="rating" name="rating" required>
+                        <option value="1" {% if review.rating == 1 %}selected{% endif %}>1 Star</option>
+                        <option value="2" {% if review.rating == 2 %}selected{% endif %}>2 Stars</option>
+                        <option value="3" {% if review.rating == 3 %}selected{% endif %}>3 Stars</option>
+                        <option value="4" {% if review.rating == 4 %}selected{% endif %}>4 Stars</option>
+                        <option value="5" {% if review.rating == 5 %}selected{% endif %}>5 Stars</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="text">Review Text</label>
+                    <textarea id="text" name="text">{{ review.text or '' }}</textarea>
+                </div>
+                <div class="btn-group">
+                    <button type="submit" class="btn update-btn">Update Review</button>
+                    <a href="{{ url_for('patient_ambulance', ambulance_id=review.ambulance_id) }}" class="btn cancel-btn">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

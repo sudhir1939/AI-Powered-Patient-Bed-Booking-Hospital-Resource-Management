@@ -1,0 +1,267 @@
+<!-- patient_nurse.html (New file) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nurse Details - Hospital Resources Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+       
+        body {
+            background-color: #f0f8ff;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+       
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            flex: 1;
+        }
+       
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background: linear-gradient(135deg, #41b883 0%, #329268 100%);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+       
+        .header-content h1 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+       
+        .back-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+       
+        .back-btn:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+       
+        .nurse-info {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+       
+        h2 {
+            color: #41b883;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+       
+        .info-item {
+            margin-bottom: 15px;
+        }
+       
+        .info-label {
+            font-weight: 600;
+            color: #555;
+        }
+       
+        .rates-section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+       
+        .rate-item {
+            margin-bottom: 10px;
+        }
+       
+        .reviews-section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+       
+        .review-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+       
+        .review-item:last-child {
+            border-bottom: none;
+        }
+       
+        .review-rating {
+            font-weight: 600;
+            color: #ff9f43;
+        }
+       
+        .review-text {
+            color: #666;
+        }
+       
+        .action-btn {
+            background-color: #41b883;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+       
+        .action-btn:hover {
+            background-color: #329268;
+        }
+       
+        .review-form {
+            margin-top: 20px;
+        }
+       
+        .form-group {
+            margin-bottom: 20px;
+        }
+       
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+       
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+       
+        button {
+            background-color: #41b883;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+       
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+            font-size: 0.9rem;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1><i class="fas fa-user-nurse"></i> Nurse Details</h1>
+            </div>
+            <a href="{{ url_for('patient_hospital', hospital_id=nurse.hospital_id) }}" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Back
+            </a>
+        </header>
+       
+        <div class="nurse-info">
+            <h2><i class="fas fa-info-circle"></i> Nurse Information</h2>
+            <div class="info-item">
+                <span class="info-label">Name:</span> {{ nurse.name }}
+            </div>
+            <div class="info-item">
+                <span class="info-label">Email:</span> {{ nurse.email }}
+            </div>
+            <div class="info-item">
+                <span class="info-label">Mobile:</span> {{ nurse.mobile }}
+            </div>
+            <div class="info-item">
+                <span class="info-label">Info:</span> {{ nurse.info }}
+            </div>
+            <div class="info-item">
+                <span class="info-label">Status:</span> {{ nurse.status }}
+            </div>
+            <div class="info-item">
+                <span class="info-label">Availability:</span> {{ nurse.availability_locations.replace(',', ', ') }}
+            </div>
+            {% if nurse.status == 'available' %}
+                <a href="{{ url_for('patient_book_nurse', nurse_id=nurse.id) }}" class="action-btn">Book Nurse</a>
+            {% else %}
+                <p>Already booked</p>
+            {% endif %}
+        </div>
+       
+        <div class="rates-section">
+            <h2><i class="fas fa-dollar-sign"></i> Rates</h2>
+            {% for rate in rates %}
+                <div class="rate-item">
+                    {{ rate.rate_type.replace('_', ' ').title() }}: ₹{{ rate.price }}
+                </div>
+            {% endfor %}
+        </div>
+       
+        <div class="reviews-section">
+            <h2><i class="fas fa-star"></i> Reviews</h2>
+            {% for review in reviews %}
+                <div class="review-item">
+                    <span class="review-rating">Rating: {{ review.rating }}</span>
+                    <p class="review-text">{{ review.text }}</p>
+                    {% if review.patient_id == session.user_id %}
+                        <a href="{{ url_for('patient_edit_nurse_review', review_id=review.id) }}">Edit</a>
+                        <a href="{{ url_for('patient_delete_nurse_review', review_id=review.id) }}">Delete</a>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <form method="POST" action="{{ url_for('patient_add_nurse_review', nurse_id=nurse.id) }}" class="review-form">
+                <div class="form-group">
+                    <label for="rating">Rating (1-5)</label>
+                    <input type="number" id="rating" name="rating" min="1" max="5" required>
+                </div>
+                <div class="form-group">
+                    <label for="text">Review Text</label>
+                    <textarea id="text" name="text" required></textarea>
+                </div>
+                <button type="submit">Add Review</button>
+            </form>
+        </div>
+       
+        <footer>
+            <p>© 2023 Hospital Resources Management System. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>

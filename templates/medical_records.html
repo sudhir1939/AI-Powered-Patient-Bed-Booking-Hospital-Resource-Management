@@ -1,0 +1,566 @@
+<!-- medical_records.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Medical Records</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f8ff;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #2c7fb8 0%, #236699 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .add-record-section {
+            background-color: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 4px solid #41b883;
+        }
+        
+        .add-record-section h2 {
+            color: #41b883;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+            font-size: 0.9rem;
+        }
+        
+        input[type="text"],
+        input[type="number"],
+        input[type="file"],
+        textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="file"]:focus,
+        textarea:focus {
+            border-color: #41b883;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(65, 184, 131, 0.1);
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+        
+        .file-input-custom {
+            padding: 12px 15px;
+            background-color: #e6f2ff;
+            border: 2px dashed #2c7fb8;
+            border-radius: 8px;
+            text-align: center;
+            color: #2c7fb8;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .file-input-custom:hover {
+            background-color: #d0e2ff;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #41b883 0%, #329268 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(65, 184, 131, 0.3);
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            transform: translateY(-2px);
+        }
+        
+        .search-section {
+            background-color: #e6f2ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 4px solid #2c7fb8;
+        }
+        
+        .search-section h3 {
+            color: #2c7fb8;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .search-form {
+            display: flex;
+            gap: 15px;
+            align-items: end;
+        }
+        
+        .search-input {
+            flex: 1;
+        }
+        
+        .records-section {
+            margin-bottom: 30px;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .section-header h2 {
+            color: #2c7fb8;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .records-count {
+            background-color: #e6f2ff;
+            color: #2c7fb8;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        thead {
+            background: linear-gradient(135deg, #2c7fb8 0%, #236699 100%);
+            color: white;
+        }
+        
+        th {
+            padding: 15px 20px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        td {
+            padding: 15px 20px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        tbody tr {
+            transition: background-color 0.3s ease;
+        }
+        
+        tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .patient-cell {
+            font-weight: 600;
+            color: #2c7fb8;
+        }
+        
+        .age-cell {
+            color: #555;
+            font-weight: 500;
+        }
+        
+        .mobile-cell {
+            font-family: 'Courier New', monospace;
+            color: #333;
+        }
+        
+        .condition-cell {
+            color: #666;
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .actions-cell {
+            text-align: center;
+        }
+        
+        .action-links {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .action-link {
+            padding: 8px 15px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .view-link {
+            background-color: #e6f2ff;
+            color: #2c7fb8;
+        }
+        
+        .view-link:hover {
+            background-color: #2c7fb8;
+            color: white;
+            transform: translateY(-1px);
+        }
+        
+        .delete-link {
+            background-color: #ffe6e6;
+            color: #e74c3c;
+        }
+        
+        .delete-link:hover {
+            background-color: #e74c3c;
+            color: white;
+            transform: translateY(-1px);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #777;
+        }
+        
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: #ddd;
+        }
+        
+        .empty-state h3 {
+            color: #666;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+        
+        .empty-state p {
+            color: #888;
+            font-size: 0.95rem;
+        }
+        
+        .footer-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .info-note {
+            background-color: #e8f5e9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #41b883;
+            color: #2d5a3d;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            th, td {
+                padding: 12px 15px;
+            }
+            
+            .action-links {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .footer-actions {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Medical Records</h1>
+            <p>Manage patient medical records and documents securely</p>
+        </header>
+        
+        <div class="content">
+            <div class="info-note">
+                <strong>🔒 Secure Storage:</strong> All medical records are stored securely. Only authorized personnel can access patient information.
+            </div>
+            
+            <div class="add-record-section">
+                <h2>➕ Add New Medical Record</h2>
+                <form method="POST" enctype="multipart/form-data">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="patient_name">Patient Name</label>
+                            <input type="text" id="patient_name" name="patient_name" placeholder="Enter patient full name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="age">Age</label>
+                            <input type="number" id="age" name="age" placeholder="Enter age" required min="1" max="120">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="mobile">Mobile Number</label>
+                            <input type="text" id="mobile" name="mobile" placeholder="Enter mobile number" required>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label for="medical_condition">Medical Condition</label>
+                            <textarea id="medical_condition" name="medical_condition" placeholder="Describe the medical condition, symptoms, and treatment"></textarea>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label for="file">Medical Document (PDF only)</label>
+                            <div class="file-input-wrapper">
+                                <input type="file" id="file" name="file" accept=".pdf" required>
+                                <div class="file-input-custom">
+                                    📁 Choose PDF File
+                                </div>
+                            </div>
+                            <small style="color: #666; margin-top: 5px; display: block;">Only PDF files are accepted for security reasons</small>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">📋 Add Medical Record</button>
+                </form>
+            </div>
+            
+            <div class="search-section">
+                <h3>🔍 Search Records</h3>
+                <form method="GET" class="search-form">
+                    <div class="form-group search-input">
+                        <input type="text" name="search" placeholder="Search by patient name..." value="{{ search }}">
+                    </div>
+                    <button type="submit" class="btn btn-secondary">Search</button>
+                </form>
+            </div>
+            
+            <div class="records-section">
+                <div class="section-header">
+                    <h2>📂 Medical Records</h2>
+                    <div class="records-count">{{ records|length }} record(s)</div>
+                </div>
+                
+                {% if records %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Patient Name</th>
+                            <th>Age</th>
+                            <th>Mobile</th>
+                            <th>Condition</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in records %}
+                        <tr>
+                            <td class="patient-cell">{{ record.patient_name }}</td>
+                            <td class="age-cell">{{ record.age }}</td>
+                            <td class="mobile-cell">{{ record.mobile }}</td>
+                            <td class="condition-cell">{{ record.medical_condition or 'N/A' }}</td>
+                            <td class="actions-cell">
+                                <div class="action-links">
+                                    <a href="{{ url_for('doctor_download_record', record_id=record.id) }}" class="action-link view-link">👁️ View</a>
+                                    <a href="{{ url_for('doctor_delete_record', record_id=record.id) }}" class="action-link delete-link" 
+                                       onclick="return confirm('Are you sure you want to delete this medical record? This action cannot be undone.')">🗑️ Delete</a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="empty-state">
+                    <div>📭</div>
+                    <h3>No Medical Records Found</h3>
+                    <p>{% if search %}No records match your search criteria.{% else %}Get started by adding your first medical record above.{% endif %}</p>
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="footer-actions">
+                <div style="color: #666; font-size: 0.9rem;">
+                    💼 Manage patient records efficiently and securely
+                </div>
+                <a href="{{ url_for('doctor_dashboard') }}" class="btn btn-secondary">← Back to Dashboard</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Update file input display
+        document.getElementById('file').addEventListener('change', function(e) {
+            const fileName = this.files[0] ? this.files[0].name : 'Choose PDF File';
+            this.nextElementSibling.textContent = '📁 ' + fileName;
+        });
+        
+        // Form validation
+        document.querySelector('form[method="POST"]').addEventListener('submit', function(e) {
+            const fileInput = document.getElementById('file');
+            if (fileInput.files.length > 0) {
+                const fileName = fileInput.files[0].name.toLowerCase();
+                if (!fileName.endsWith('.pdf')) {
+                    alert('Please select a PDF file only.');
+                    e.preventDefault();
+                    return false;
+                }
+            }
+            return true;
+        });
+        
+        // Set focus to first input
+        document.getElementById('patient_name').focus();
+    </script>
+</body>
+</html>

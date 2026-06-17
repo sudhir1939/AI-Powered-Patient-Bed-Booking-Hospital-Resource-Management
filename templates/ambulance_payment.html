@@ -1,0 +1,185 @@
+<!-- ambulance_payment.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pay Ambulance Bill</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f8ff;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-top: 5px solid #e74c3c;
+        }
+        
+        .amount {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #e74c3c;
+            margin: 20px 0;
+            padding: 20px;
+            background-color: #fff3cd;
+            border-radius: 5px;
+        }
+        
+        #razorpay-container {
+            margin: 20px 0;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            flex: 1;
+            max-width: 200px;
+        }
+        
+        .pay-btn {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .pay-btn:hover {
+            background-color: #c0392b;
+        }
+        
+        .back-btn {
+            background-color: #95a5a6;
+            color: white;
+        }
+        
+        .back-btn:hover {
+            background-color: #7f8c8d;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+            font-size: 0.9rem;
+            margin-top: 30px;
+        }
+    </style>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-credit-card"></i> Pay Ambulance Bill</h1>
+        </header>
+        
+        <div class="card">
+            <div class="amount">
+                Amount: ₹{{ amount }}
+            </div>
+            
+            <div id="razorpay-container"></div>
+            
+            <div class="btn-group">
+                <button id="pay-button" class="btn pay-btn">Pay Securely with Razorpay</button>
+                <a href="{{ url_for('patient_dashboard') }}" class="btn back-btn">Back to Dashboard</a>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2023 Hospital Resources Management System. All rights reserved.</p>
+        </footer>
+    </div>
+    
+    <script>
+        var options = {
+            "key": "{{ key }}",
+            "amount": {{ order['amount'] }},
+            "currency": "{{ order['currency'] }}",
+            "name": "Hospital Ambulance Booking",
+            "description": "Secure payment for ambulance service",
+            "order_id": "{{ order['id'] }}",
+            "handler": function (response) {
+                // Submit form with payment details
+                var form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/payment_success_ambulance/{{ booking_id }}';
+                form.style.display = 'none';
+                
+                var razorpayOrderId = document.createElement('input');
+                razorpayOrderId.type = 'hidden';
+                razorpayOrderId.name = 'razorpay_order_id';
+                razorpayOrderId.value = response.razorpay_order_id;
+                form.appendChild(razorpayOrderId);
+                
+                var razorpayPaymentId = document.createElement('input');
+                razorpayPaymentId.type = 'hidden';
+                razorpayPaymentId.name = 'razorpay_payment_id';
+                razorpayPaymentId.value = response.razorpay_payment_id;
+                form.appendChild(razorpayPaymentId);
+                
+                var razorpaySignature = document.createElement('input');
+                razorpaySignature.type = 'hidden';
+                razorpaySignature.name = 'razorpay_signature';
+                razorpaySignature.value = response.razorpay_signature;
+                form.appendChild(razorpaySignature);
+                
+                document.body.appendChild(form);
+                form.submit();
+            },
+            "prefill": {},
+            "theme": {
+                "color": "#e74c3c"
+            }
+        };
+        var rzp = new Razorpay(options);
+        document.getElementById('pay-button').onclick = function(e) {
+            rzp.open();
+            e.preventDefault();
+        };
+    </script>
+</body>
+</html>

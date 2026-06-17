@@ -1,0 +1,151 @@
+<!-- emergency_book.html (new) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Ambulance Booking</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f8ff;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-top: 5px solid #e74c3c;
+        }
+        
+        h1 {
+            color: #e74c3c;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .vehicle-info {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .vehicle-name {
+            font-weight: 600;
+            color: #e74c3c;
+            margin-bottom: 5px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #e74c3c;
+            box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.2);
+        }
+        
+        .estimated-amount {
+            background-color: #fff3cd;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: 600;
+            color: #856404;
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .btn:hover {
+            background-color: #c0392b;
+        }
+        
+        .back-btn {
+            display: inline-block;
+            margin-top: 20px;
+            color: #e74c3c;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px auto;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1><i class="fas fa-exclamation-triangle"></i> Emergency Ambulance Booking</h1>
+            <div class="vehicle-info">
+                <div class="vehicle-name">Vehicle: {{ vehicle.name }}</div>
+                <div>Numberplate: {{ vehicle.numberplate }}</div>
+                <div>Medical Support: {{ vehicle.medical_support or 'Standard' }}</div>
+                <div class="estimated-amount">Emergency Cost: ₹{{ vehicle.cost_price * 2 }}</div>
+            </div>
+            <form method="POST">
+                <div class="form-group">
+                    <label for="location_link">Share Your Live Location Link (Required for Emergency)</label>
+                    <textarea id="location_link" name="location_link" placeholder="Paste your live location sharing link here (e.g., Google Maps link)..." required></textarea>
+                </div>
+                <button type="submit" class="btn">Proceed to Pay and Confirm</button>
+            </form>
+            <a href="{{ url_for('patient_ambulance', ambulance_id=vehicle.ambulance_id) }}" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Back to Ambulance
+            </a>
+        </div>
+    </div>
+</body>
+</html>
